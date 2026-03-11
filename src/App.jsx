@@ -17,6 +17,18 @@ const fallbackNews = [
   },
 ];
 
+const NAV_ITEMS = [
+  { label: "Home", path: "home" },
+  { label: "About", path: "about" },
+  { label: "Domains", path: "domains" },
+  { label: "Events", path: "events" },
+  { label: "Resources", path: "resources" },
+  { label: "Projects", path: "projects" },
+  { label: "Chat", path: "chat" },
+  { label: "Team", path: "team" },
+  { label: "Contact", path: "contact" },
+];
+
 const SectionHeading = ({ eyebrow, title, description, center }) => (
   <motion.div
     variants={fadeUp}
@@ -76,8 +88,9 @@ const Snowfall = () => {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const baseCount = Math.round((width * height) / 24000);
-      const count = reducedMotion ? 28 : Math.max(40, Math.min(140, baseCount));
+      const baseCount = Math.round((width * height) / 32000);
+      const isMobile = width < 768;
+      const count = reducedMotion ? 18 : isMobile ? 24 : Math.max(30, Math.min(110, baseCount));
       particles = Array.from({ length: count }, createParticle);
     };
 
@@ -132,11 +145,20 @@ const Preloader = ({ visible }) => (
   </div>
 );
 
+const getRouteFromHash = () => {
+  if (typeof window === "undefined") return "home";
+  const hash = window.location.hash || "#/home";
+  const cleaned = hash.replace(/^#\/?/, "");
+  const isValid = NAV_ITEMS.some((item) => item.path === cleaned);
+  return cleaned && isValid ? cleaned : "home";
+};
+
 const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [eventFilter, setEventFilter] = useState("All");
+  const [route, setRoute] = useState(getRouteFromHash);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -156,6 +178,16 @@ const App = () => {
     window.addEventListener("resize", close);
     return () => window.removeEventListener("resize", close);
   }, [menuOpen]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    if (!window.location.hash) {
+      window.location.hash = "#/home";
+    }
+    const handleHashChange = () => setRoute(getRouteFromHash());
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
 
   const handleRipple = (event) => {
     const target = event.currentTarget;
@@ -362,57 +394,13 @@ const App = () => {
     },
   ];
 
-  const liveCodeStarter = [
-    "# Simple linear regression with NumPy",
-    "import numpy as np",
-    "",
-    "X = np.array([[1, 1.2], [1, 2.0], [1, 2.8], [1, 3.6]])",
-    "y = np.array([2.1, 3.9, 5.8, 7.2])",
-    "",
-    "# Solve for weights using the normal equation",
-    "w = np.linalg.inv(X.T @ X) @ X.T @ y",
-    "x_new = np.array([1, 4.2])",
-    "pred = x_new @ w",
-    'print("Predicted:", round(pred, 2))',
-  ].join("\n");
-
   const recentActivity = [
     { title: "NVIDIA DLI Workshop Wrapped", date: "28 Feb 2026" },
     { title: "Fastathon (Month of March)", date: "March 2026" },
   ];
 
-  const interviewQuestions = [
-    {
-      question:
-        "NumPy: Given a = np.array([[1, 2, 3], [4, 5, 6]]), what does a[:, 1] return?",
-      accepted: ["[2, 5]", "array([2,5])", "2 5", "2,5"],
-    },
-    {
-      question: "Python: What's the key difference between a list and a tuple?",
-      keywords: ["mutable", "immutable"],
-    },
-    {
-      question: "Web Dev: What does CSS `display: grid` enable?",
-      keywords: ["two-dimensional", "rows", "columns"],
-    },
-    {
-      question: "C++: One-line difference between stack and heap memory?",
-      keywords: ["stack", "heap", "automatic", "manual"],
-    },
-    {
-      question: "Java: What is the purpose of the JVM?",
-      keywords: ["bytecode", "run", "platform"],
-    },
-  ];
-
   const [newsItems, setNewsItems] = useState(fallbackNews);
   const [newsStatus, setNewsStatus] = useState("missing");
-  const [practiceAnswer, setPracticeAnswer] = useState("");
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [practiceFeedback, setPracticeFeedback] = useState("");
-  const [codeText, setCodeText] = useState(liveCodeStarter);
-  const [runOutput, setRunOutput] = useState("Ready. Edit the code and click Run Script.");
   const [chatInput, setChatInput] = useState("");
   const [chatStatus, setChatStatus] = useState("");
   const [chatMessages, setChatMessages] = useState([
@@ -437,39 +425,9 @@ const App = () => {
   });
   const [contactStatus, setContactStatus] = useState("");
 
-  const normalizeCompact = (value) => value.toLowerCase().replace(/[^a-z0-9]/g, "");
-  const normalizeText = (value) => value.toLowerCase();
+
   const apiBase = (import.meta.env.VITE_API_BASE || "").replace(/\/$/, "");
   const buildApiUrl = (path) => (apiBase ? `${apiBase}${path}` : path);
-
-  const isCorrectAnswer = (value, item) => {
-    if (!value.trim()) return false;
-    if (item.accepted) {
-      const cleaned = normalizeCompact(value);
-      return item.accepted.some((option) => cleaned === normalizeCompact(option));
-    }
-    if (item.keywords) {
-      const cleaned = normalizeText(value);
-      return item.keywords.every((keyword) => cleaned.includes(keyword));
-    }
-    return false;
-  };
-
-  const handlePracticeSubmit = () => {
-    if (!practiceAnswer.trim()) return;
-    const current = interviewQuestions[questionIndex];
-    const correct = isCorrectAnswer(practiceAnswer, current);
-    setPracticeFeedback(correct ? "Correct!" : "Not quite. Next one!");
-    setStreak((prev) => (correct ? prev + 1 : 0));
-    setPracticeAnswer("");
-    setQuestionIndex((prev) => (prev + 1) % interviewQuestions.length);
-  };
-
-  const handleRunCode = () => {
-    setRunOutput(
-      "Simulated output: Predicted: 8.49 - Client-side preview only (add a backend to execute Python)."
-    );
-  };
 
   const sendApiRequest = async (path, payload) => {
     const response = await fetch(buildApiUrl(path), {
@@ -622,23 +580,19 @@ const App = () => {
         }`}
       >
         <div className="mx-auto flex w-[92%] max-w-6xl items-center justify-between py-4">
-          <a href="#home" className="flex items-center gap-3">
+          <a href="#/home" className="flex items-center gap-3">
             <img src={fastLogo} alt="FAST logo" className="h-16 w-auto logo-glow logo-glow-hover" />
           </a>
-          <nav className="hidden items-center gap-6 text-sm text-fast-mist md:flex">
-            {[
-              "Home",
-              "About",
-              "Domains",
-              "Events",
-              "Resources",
-              "Projects",
-              "Chat",
-              "Team",
-              "Contact",
-            ].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} className="transition hover:text-white">
-                {item}
+          <nav className="hidden items-center gap-6 text-sm md:flex">
+            {NAV_ITEMS.map((item) => (
+              <a
+                key={item.label}
+                href={`#/${item.path}`}
+                className={`transition ${
+                  route === item.path ? "text-white" : "text-fast-mist hover:text-white"
+                }`}
+              >
+                {item.label}
               </a>
             ))}
           </nav>
@@ -648,7 +602,7 @@ const App = () => {
               NVIDIA Partner
             </div>
             <a
-              href="#contact"
+              href="#/contact"
               className="hidden rounded-full bg-gradient-to-r from-fast-nvidia to-fast-neon px-5 py-2 text-sm font-semibold text-fast-black shadow-glow transition hover:-translate-y-0.5 md:inline-flex ripple-btn"
               onClick={handleRipple}
             >
@@ -670,26 +624,18 @@ const App = () => {
         </div>
         {menuOpen ? (
           <div className="md:hidden">
-            <div className="mx-auto w-[92%] max-w-6xl rounded-2xl border border-fast-neon/20 bg-fast-deep/95 p-6 text-sm text-fast-mist shadow-deep">
+            <div className="mx-auto w-[92%] max-w-6xl rounded-2xl border border-fast-neon/20 bg-fast-deep/95 p-6 text-sm shadow-deep">
               <div className="flex flex-col gap-4">
-                {[
-                  "Home",
-                  "About",
-                  "Domains",
-                  "Events",
-                  "Resources",
-                  "Projects",
-                  "Chat",
-                  "Team",
-                  "Contact",
-                ].map((item) => (
+                {NAV_ITEMS.map((item) => (
                   <a
-                    key={item}
-                    href={`#${item.toLowerCase()}`}
-                    className="transition hover:text-white"
+                    key={item.label}
+                    href={`#/${item.path}`}
+                    className={`transition ${
+                      route === item.path ? "text-white" : "text-fast-mist hover:text-white"
+                    }`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    {item}
+                    {item.label}
                   </a>
                 ))}
               </div>
@@ -699,6 +645,7 @@ const App = () => {
       </header>
 
       <main className="relative z-10">
+        {route === "home" && (
         <section id="home" className="section-wrap grid-bg pt-32">
           <div className="absolute inset-0 bg-gradient-to-b from-fast-black/40 via-fast-black/70 to-fast-black/95" />
           <div className="relative mx-auto grid w-[92%] max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
@@ -731,14 +678,14 @@ const App = () => {
               </p>
               <div className="flex flex-wrap gap-4">
                 <a
-                  href="#contact"
+                  href="#/contact"
                   className="rounded-full bg-gradient-to-r from-fast-nvidia to-fast-neon px-6 py-3 text-sm font-semibold text-fast-black shadow-glow transition hover:-translate-y-0.5 ripple-btn"
                   onClick={handleRipple}
                 >
                   Join the Community
                 </a>
                 <a
-                  href="#domains"
+                  href="#/domains"
                   className="rounded-full border border-fast-neon/30 bg-fast-deep/60 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 ripple-btn"
                   onClick={handleRipple}
                 >
@@ -791,7 +738,9 @@ const App = () => {
             </motion.div>
           </div>
         </section>
+        )}
 
+        {route === "about" && (
         <section id="about" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -819,7 +768,9 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
 
+        {route === "domains" && (
         <section id="domains" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -856,7 +807,9 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
 
+        {route === "events" && (
         <section id="events" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -961,7 +914,9 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
 
+        {route === "resources" && (
         <section id="resources" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -969,100 +924,6 @@ const App = () => {
               title="FAST Learning Hub"
               description="Practice, build, and stay updated with FAST's live learning utilities."
             />
-            <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="glass-card rounded-3xl p-6"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="font-heading text-lg text-fast-cyan">Live Code Editor</h3>
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="rounded-full border border-fast-cyan/40 bg-fast-black/40 px-3 py-1 text-fast-cyan">
-                      Python
-                    </span>
-                    <button
-                      type="button"
-                      className="rounded-full border border-fast-neon/20 bg-fast-deep/70 px-3 py-1 text-fast-mist transition hover:border-fast-cyan/40 hover:text-fast-cyan"
-                      onClick={() => {
-                        setCodeText(liveCodeStarter);
-                        setRunOutput("Simulated output: Predicted: 8.49 - Client-side preview only (add a backend to execute Python)." );
-                      }}
-                    >
-                      Reset
-                    </button>
-                  </div>
-                </div>
-                <textarea
-                  value={codeText}
-                  onChange={(event) => setCodeText(event.target.value)}
-                  className="mt-4 h-48 w-full resize-none rounded-2xl border border-fast-cyan/20 bg-fast-black/50 p-4 font-mono text-sm text-fast-cyan focus:outline-none focus:ring-2 focus:ring-fast-cyan/40"
-                />
-                <div className="mt-3 rounded-2xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-xs text-fast-mist">
-                  {runOutput}
-                </div>
-                <button
-                  type="button"
-                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-fast-cyan px-4 py-2 text-xs font-semibold text-fast-black ripple-btn"
-                  onClick={(event) => {
-                    handleRipple(event);
-                    handleRunCode();
-                  }}
-                >
-                  Run Script
-                </button>
-              </motion.div>
-
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="glass-card rounded-3xl p-6"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="font-heading text-lg text-fast-cyan">Coding Interview Practice</h3>
-                  <span className="rounded-full border border-fast-cyan/40 bg-fast-black/40 px-3 py-1 text-xs text-fast-cyan">
-                    Streak: {streak}
-                  </span>
-                </div>
-                <div className="mt-4 rounded-2xl border border-fast-neon/20 bg-fast-black/40 p-4 text-sm text-fast-mist">
-                  {interviewQuestions[questionIndex].question}
-                </div>
-                <div className="mt-4 flex flex-wrap gap-3">
-                  <input
-                    type="text"
-                    placeholder="Your answer..."
-                    value={practiceAnswer}
-                    onChange={(event) => setPracticeAnswer(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        handlePracticeSubmit();
-                      }
-                    }}
-                    className="flex-1 rounded-full border border-fast-neon/20 bg-fast-black/40 px-4 py-2 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-cyan/40"
-                  />
-                  <button
-                    type="button"
-                    className="rounded-full bg-fast-cyan px-4 py-2 text-xs font-semibold text-fast-black ripple-btn"
-                    onClick={(event) => {
-                      handleRipple(event);
-                      handlePracticeSubmit();
-                    }}
-                  >
-                    Submit
-                  </button>
-                </div>
-                {practiceFeedback ? (
-                  <div className="mt-3 text-xs text-fast-mist">{practiceFeedback}</div>
-                ) : null}
-              </motion.div>
-            </div>
-
             <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
               <motion.div
                 variants={fadeUp}
@@ -1129,7 +990,9 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
 
+        {route === "projects" && (
         <section id="projects" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -1162,7 +1025,9 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
 
+        {route === "chat" && (
         <section id="chat" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -1298,7 +1163,9 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
 
+        {route === "team" && (
         <section id="team" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -1358,7 +1225,9 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
 
+        {route === "team" && (
         <section id="builders" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -1407,7 +1276,9 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
 
+        {route === "about" && (
         <section id="partner" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -1449,7 +1320,9 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
 
+        {route === "contact" && (
         <section id="contact" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
@@ -1575,6 +1448,7 @@ const App = () => {
             </div>
           </div>
         </section>
+        )}
       </main>
 
       <footer className="border-t border-fast-neon/10 bg-fast-deep/70 py-10">
@@ -1587,19 +1461,9 @@ const App = () => {
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-fast-mist">
-            {[
-              "Home",
-              "About",
-              "Domains",
-              "Events",
-              "Resources",
-              "Projects",
-              "Chat",
-              "Team",
-              "Contact",
-            ].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-white">
-                {item}
+            {NAV_ITEMS.map((item) => (
+              <a key={item.label} href={`#/${item.path}`} className="hover:text-white">
+                {item.label}
               </a>
             ))}
           </div>
@@ -1616,4 +1480,5 @@ const App = () => {
 };
 
 export default App;
+
 
