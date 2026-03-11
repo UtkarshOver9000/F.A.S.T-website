@@ -1,0 +1,213 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-fast-black text-white font-body antialiased;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(39, 211, 255, 0.08), transparent 45%),
+      radial-gradient(circle at 80% 0%, rgba(118, 185, 0, 0.16), transparent 40%),
+      radial-gradient(circle at 50% 80%, rgba(11, 61, 46, 0.45), transparent 45%);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-fast-slate/80 border border-fast-neon/20 shadow-deep backdrop-blur-xl;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+
+  .glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(34, 255, 136, 0.18), transparent 55%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .glass-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(34, 255, 136, 0.12);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(34, 255, 136, 0.45);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+  }
+
+  .glass-card:hover::before,
+  .glass-card:hover::after {
+    opacity: 1;
+  }
+
+  .neon-border {
+    @apply border border-fast-neon/30;
+  }
+
+  .neon-text {
+    @apply text-fast-neon;
+  }
+
+  .section-wrap {
+    @apply relative z-10 py-24;
+  }
+
+  .section-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(34, 255, 136, 0.08), transparent 65%);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .section-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: min(70%, 680px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34, 255, 136, 0.6), transparent);
+    transform: translateX(-50%);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .section-wrap > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(34, 255, 136, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34, 255, 136, 0.08) 1px, transparent 1px);
+    background-size: 70px 70px;
+  }
+
+  .logo-glow {
+    filter: drop-shadow(0 0 18px rgba(0, 255, 166, 0.6));
+  }
+
+  .logo-glow-hover {
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
+
+  .logo-glow-hover:hover {
+    filter: drop-shadow(0 0 28px rgba(0, 255, 166, 0.85));
+    transform: scale(1.02);
+  }
+
+  .hero-ring {
+    @apply absolute rounded-full border border-fast-neon/30;
+    inset: 0;
+    margin: auto;
+  }
+
+  .nvidia-orbit {
+    position: absolute;
+    inset: 0;
+    animation: spinSlow 18s linear infinite;
+    z-index: 20;
+  }
+
+  .nvidia-orbit-2 {
+    inset: 12%;
+    animation-direction: reverse;
+    animation-duration: 14s;
+  }
+
+  .nvidia-badge {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 76px;
+    width: 76px;
+    border-radius: 9999px;
+    background: rgba(13, 23, 38, 0.9);
+    border: 1px solid rgba(118, 185, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 24px rgba(118, 185, 0, 0.35);
+  }
+
+  .ripple-btn {
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 0 24px rgba(0, 255, 166, 0.5);
+  }
+
+  .text-gradient {
+    background: linear-gradient(120deg, #ffffff, #22ff88 60%, #00ffa6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+#snow-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  display: grid;
+  place-items: center;
+  z-index: 50;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.ripple-circle {
+  position: absolute;
+  border-radius: 9999px;
+  transform: scale(0);
+  background: rgba(255, 255, 255, 0.35);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
