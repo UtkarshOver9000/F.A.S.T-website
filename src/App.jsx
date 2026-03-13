@@ -177,37 +177,22 @@ const App = () => {
     },
   ];
 
-  const domains = [
+  const domainGroups = [
     {
-      title: "Artificial Intelligence",
-      desc: "Neural networks, deep learning, and intelligent systems.",
-      icon: "AI",
+      title: "Technical",
+      desc: "The engineering backbone of FAST - hands-on builds and research.",
+      imageLabel: "TECH",
+      subdomains: ["AI", "Machine Learning", "DSBS"],
     },
     {
-      title: "Machine Learning",
-      desc: "Data-driven models, predictive analytics, and ML pipelines.",
-      icon: "ML",
-    },
-    {
-      title: "High Performance Computing",
-      desc: "CUDA, GPU acceleration, and parallel computation at scale.",
-      icon: "HPC",
-    },
-    {
-      title: "Web Development",
-      desc: "Modern frameworks, full-stack apps, and developer tools.",
-      icon: "WEB",
-    },
-    {
-      title: "Systems Programming",
-      desc: "OS internals, compilers, and low-level engineering.",
-      icon: "C++",
+      title: "Corporate",
+      desc: "Partnerships, outreach, and growth for the FAST ecosystem.",
+      imageLabel: "CORP",
     },
     {
       title: "Creatives",
-      desc: "Visual design, content creation, branding, and social media.",
-      icon: "ART",
-      highlight: true,
+      desc: "Visual design, content, and storytelling that amplify the club.",
+      imageLabel: "CRTV",
     },
   ];
 
@@ -217,13 +202,13 @@ const App = () => {
       tag: "Hackathon",
       title: "Fastathon",
       meta: "Tech Park 2, Room 712",
-      date: "24-25 March 2026 • 9:00 AM",
+      date: "24-25 March 2026 - 9:00 AM",
       desc: "24-hour NVIDIA-powered hackathon. Earn NVIDIA DLI certificates each round with refreshments provided.",
       status: "Coming Soon",
       icon: "IDE",
       image: "Fastathon Poster",
       poster: "/assets/fastathon-poster.png",
-      details: ["Prize Pool: ₹60,000 + ₹3,00,000 NVIDIA Credits", "Register before March 19", "24-hour format"],
+      details: ["Prize Pool: INR 60,000 + INR 3,00,000 NVIDIA Credits", "Register before March 19", "24-hour format"],
       calendar: {
         start: "20260324T090000",
         end: "20260325T090000",
@@ -257,13 +242,17 @@ const App = () => {
     },
   ];
 
-  const galleryItems = [
-    { title: "AI Lab Moments", caption: "Gallery drop - TBA" },
-    { title: "FAST Workshops", caption: "Coming soon" },
-    { title: "Fastathon Highlights", caption: "Coming soon" },
-    { title: "GPU Sessions", caption: "Coming soon" },
-    { title: "Team Sprints", caption: "Coming soon" },
-    { title: "Campus Collabs", caption: "Coming soon" },
+  const gallerySections = [
+    {
+      title: "Technical Gallery",
+      description: "Labs, workshops, and hackathon builds.",
+      slots: 4,
+    },
+    {
+      title: "Social Gallery",
+      description: "Community moments and creative drops.",
+      slots: 4,
+    },
   ];
 
   const eventFilters = ["All", "Workshop", "Bootcamp", "Hackathon"];
@@ -273,12 +262,7 @@ const App = () => {
     [eventFilter, events]
   );
 
-  const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
-  const [contactStatus, setContactStatus] = useState("");
   const [eventNotice, setEventNotice] = useState({});
-  const [galleryStatus, setGalleryStatus] = useState("");
-  const apiBase = (import.meta.env.VITE_API_BASE || "").replace(/\/$/, "");
-  const contactUrl = apiBase ? `${apiBase}/api/contact` : "/api/contact";
 
   const handleAddToCalendar = (event) => {
     if (!event.calendar) {
@@ -320,31 +304,6 @@ const App = () => {
       return;
     }
     setEventNotice((prev) => ({ ...prev, [event.title]: "Details will be announced soon." }));
-  };
-
-  const handleGalleryClick = (item) => {
-    setGalleryStatus(`${item.title} - media drop coming soon.`);
-  };
-
-  const handleContactSubmit = async (event) => {
-    event.preventDefault();
-    if (!contactForm.name || !contactForm.email || !contactForm.message) {
-      setContactStatus("Please fill in all fields.");
-      return;
-    }
-    setContactStatus("Sending...");
-    try {
-      const response = await fetch(contactUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(contactForm),
-      });
-      if (!response.ok) throw new Error("Failed");
-      setContactStatus("Submitted. We'll get back soon.");
-      setContactForm({ name: "", email: "", message: "" });
-    } catch (error) {
-      setContactStatus("Backend offline. Use LinkedIn or Instagram.");
-    }
   };
 
   const placeholderProjects = [
@@ -656,31 +615,46 @@ const App = () => {
             <SectionHeading
               eyebrow="What We Do"
               title="Our Domains"
-              description="Six core areas where we build, learn, and innovate together."
+              description="Three pillars that power FAST. Technical, Corporate, and Creatives."
             />
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {domains.map((domain) => (
+            <div className="grid gap-8 lg:grid-cols-3">
+              {domainGroups.map((domain, index) => (
                 <motion.div
                   key={domain.title}
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  className={`glass-card rounded-3xl p-6 ${domain.highlight ? "border-fast-neon/40" : ""}`}
+                  transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.05 }}
+                  className="domain-card relative overflow-hidden rounded-[28px] border border-fast-neon/20 bg-fast-black/60 p-6"
                 >
-                  <IconBadge label={domain.icon} />
-                  <h3 className="mt-4 font-heading text-lg">{domain.title}</h3>
-                  <p className="mt-2 text-sm text-fast-mist">{domain.desc}</p>
-                  {domain.highlight ? (
-                    <a
-                      href="https://www.instagram.com/fast_srm"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 inline-flex items-center gap-2 rounded-full border border-pink-400/40 bg-pink-500/10 px-4 py-2 text-xs font-semibold text-pink-300"
-                    >
-                      @fast_srm
-                    </a>
+                  <div className="domain-pattern absolute inset-0 opacity-70" />
+                  <span className="domain-orb -left-6 top-6" style={{ animationDelay: `${index * 0.3}s` }} />
+                  <span className="domain-orb -right-5 bottom-6" style={{ animationDelay: `${index * 0.6}s` }} />
+                  <div className="relative flex items-start gap-4">
+                    <div className="domain-image">
+                      {domain.image ? (
+                        <img src={domain.image} alt={`${domain.title} visual`} className="h-full w-full rounded-full object-cover" />
+                      ) : (
+                        <span>{domain.imageLabel}</span>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="font-heading text-lg">{domain.title}</h3>
+                      <p className="mt-2 text-sm text-fast-mist">{domain.desc}</p>
+                    </div>
+                  </div>
+                  {domain.subdomains ? (
+                    <div className="relative mt-5 flex flex-wrap gap-2 text-xs uppercase tracking-[0.2em]">
+                      {domain.subdomains.map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-full border border-fast-neon/30 bg-fast-emerald/20 px-3 py-1 text-fast-neon"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   ) : null}
                 </motion.div>
               ))}
@@ -761,7 +735,7 @@ const App = () => {
                     {event.details ? (
                       <ul className="mt-3 space-y-1 text-xs text-fast-mist">
                         {event.details.map((detail) => (
-                          <li key={detail}>• {detail}</li>
+                          <li key={detail}>- {detail}</li>
                         ))}
                       </ul>
                     ) : null}
@@ -803,34 +777,31 @@ const App = () => {
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
               eyebrow="Gallery"
-              title="FAST Visual Archive"
-              description="Snapshots from workshops, labs, and hackathons. Media drops coming soon."
+              title="FAST Gallery"
+              description="Technical showcases and social highlights. Add your images into each space."
             />
-            {galleryStatus ? (
-              <p className="mb-6 text-sm text-fast-mist">{galleryStatus}</p>
-            ) : null}
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {galleryItems.map((item) => (
+            <div className="grid gap-6 lg:grid-cols-2">
+              {gallerySections.map((section) => (
                 <motion.div
-                  key={item.title}
+                  key={section.title}
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
-                  className="group relative overflow-hidden rounded-3xl border border-fast-neon/20 bg-fast-black/50"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => handleGalleryClick(item)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") handleGalleryClick(item);
-                  }}
+                  className="glass-card rounded-3xl p-6"
                 >
-                  <div className="h-48 w-full bg-gradient-to-br from-fast-emerald/30 via-fast-black/80 to-fast-black/90" />
-                  <div className="absolute inset-0 flex flex-col justify-end p-5">
-                    <p className="text-xs uppercase tracking-[0.3em] text-fast-mist">TBA</p>
-                    <h3 className="mt-2 font-heading text-lg text-white">{item.title}</h3>
-                    <p className="mt-2 text-sm text-fast-mist">{item.caption}</p>
+                  <h3 className="font-heading text-lg text-fast-neon">{section.title}</h3>
+                  <p className="mt-2 text-sm text-fast-mist">{section.description}</p>
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                    {Array.from({ length: section.slots }).map((_, index) => (
+                      <div
+                        key={`${section.title}-${index}`}
+                        className="flex h-28 items-center justify-center rounded-2xl border border-fast-neon/20 bg-fast-black/40 text-xs uppercase tracking-[0.25em] text-fast-mist"
+                      >
+                        TBA
+                      </div>
+                    ))}
                   </div>
                 </motion.div>
               ))}
@@ -1058,93 +1029,39 @@ const App = () => {
               description="For collaborations and updates, reach us on our official social channels."
               center
             />
-            <div className="mx-auto mt-10 grid max-w-5xl gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-              <motion.form
+            <div className="mx-auto mt-10 grid max-w-4xl gap-6 md:grid-cols-2">
+              <motion.a
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                onSubmit={handleContactSubmit}
-                className="glass-card rounded-3xl p-6"
+                href="https://www.linkedin.com/company/fastsrm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-card rounded-3xl p-6 text-center"
               >
-                <h3 className="font-heading text-lg text-fast-neon">Send a Query</h3>
-                <p className="mt-2 text-sm text-fast-mist">
-                  Keep it short. We will respond on your preferred channel.
-                </p>
-                <div className="mt-6 space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Full name"
-                    value={contactForm.name}
-                    onChange={(event) =>
-                      setContactForm((prev) => ({ ...prev, name: event.target.value }))
-                    }
-                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email address"
-                    value={contactForm.email}
-                    onChange={(event) =>
-                      setContactForm((prev) => ({ ...prev, email: event.target.value }))
-                    }
-                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Your query"
-                    value={contactForm.message}
-                    onChange={(event) =>
-                      setContactForm((prev) => ({ ...prev, message: event.target.value }))
-                    }
-                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full rounded-full bg-gradient-to-r from-fast-nvidia to-fast-neon px-4 py-3 text-xs font-semibold text-fast-black ripple-btn"
-                    onClick={handleRipple}
-                  >
-                    Submit Query
-                  </button>
-                </div>
-                {contactStatus ? <p className="mt-3 text-xs text-fast-mist">{contactStatus}</p> : null}
-                <p className="mt-4 text-xs text-fast-mist">Email: fast@srmist.edu.in</p>
-              </motion.form>
-
-              <div className="grid gap-6">
-                <motion.a
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  href="https://www.linkedin.com/company/fastsrm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass-card rounded-3xl p-6 text-center"
-                >
-                  <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">LinkedIn</p>
-                  <h3 className="mt-3 font-heading text-2xl text-white">FAST SRM</h3>
-                  <p className="mt-2 text-sm text-fast-mist">Industry updates and collaborations.</p>
-                </motion.a>
-                <motion.a
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  href="https://www.instagram.com/fast_srm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass-card rounded-3xl p-6 text-center"
-                >
-                  <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">Instagram</p>
-                  <h3 className="mt-3 font-heading text-2xl text-white">@fast_srm</h3>
-                  <p className="mt-2 text-sm text-fast-mist">Club highlights and event drops.</p>
-                </motion.a>
-              </div>
+                <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">LinkedIn</p>
+                <h3 className="mt-3 font-heading text-2xl text-white">FAST SRM</h3>
+                <p className="mt-2 text-sm text-fast-mist">Industry updates and collaborations.</p>
+              </motion.a>
+              <motion.a
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                href="https://www.instagram.com/fast_srm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-card rounded-3xl p-6 text-center"
+              >
+                <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">Instagram</p>
+                <h3 className="mt-3 font-heading text-2xl text-white">@fast_srm</h3>
+                <p className="mt-2 text-sm text-fast-mist">Club highlights and event drops.</p>
+              </motion.a>
             </div>
+            <p className="mt-6 text-center text-sm text-fast-mist">Email: fast@srmist.edu.in</p>
           </div>
         </section>
         )}
