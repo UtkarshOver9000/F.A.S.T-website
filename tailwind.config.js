@@ -20,7 +20,7 @@ export default {
         },
       },
       fontFamily: {
-        heading: ["Sora", "sans-serif"],
+        heading: ["Cinzel", "Sora", "sans-serif"],
         body: ["Manrope", "sans-serif"],
       },
       boxShadow: {

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Manrope:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -112,6 +112,17 @@
     background: linear-gradient(135deg, rgba(15, 30, 26, 0.95), rgba(8, 15, 24, 0.95));
     border: 1px solid rgba(34, 255, 136, 0.2);
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+  }
+
+  .spiral-bg {
+    background: conic-gradient(
+      from 120deg,
+      rgba(34, 255, 136, 0.35),
+      rgba(34, 255, 136, 0.05),
+      transparent 70%
+    );
+    filter: blur(0.2px);
+    mask: radial-gradient(circle, transparent 35%, black 36%);
   }
 
   .logo-glow {

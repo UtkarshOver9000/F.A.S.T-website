@@ -209,17 +209,19 @@ const App = () => {
       type: "Hackathon",
       tag: "Hackathon",
       title: "Fastathon",
-      meta: "SRM Main Auditorium",
-      date: "Coming Soon",
-      desc: "FAST's flagship hackathon - 24 hours of innovation, GPU challenges, and prizes.",
+      meta: "Tech Park 2, Room 712",
+      date: "24-25 March 2026 • 9:00 AM",
+      desc: "24-hour NVIDIA-powered hackathon. Earn NVIDIA DLI certificates each round with refreshments provided.",
       status: "Coming Soon",
       icon: "IDE",
-      image: "Hackathon Visual",
+      image: "Fastathon Poster",
+      poster: "/assets/fastathon-poster.jpg",
+      details: ["Prize Pool: ₹60,000 + ₹3,00,000 NVIDIA Credits", "Register before March 19", "24-hour format"],
     },
   ];
 
   const galleryItems = [
-    { title: "AI Lab Moments", caption: "Gallery drop — TBA" },
+    { title: "AI Lab Moments", caption: "Gallery drop - TBA" },
     { title: "FAST Workshops", caption: "Coming soon" },
     { title: "Fastathon Highlights", caption: "Coming soon" },
     { title: "GPU Sessions", caption: "Coming soon" },
@@ -234,26 +236,31 @@ const App = () => {
     [eventFilter, events]
   );
 
-  const eventTimeline = [
-    {
-      title: "Season Kickoff",
-      date: "Coming Soon",
-      desc: "Details will be announced soon.",
-      gradient: "from-fast-nvidia/90 to-fast-emerald/90",
-    },
-    {
-      title: "AI Bootcamp",
-      date: "Coming Soon",
-      desc: "Details will be announced soon.",
-      gradient: "from-fast-cyan/90 to-fast-blue/90",
-    },
-    {
-      title: "Fastathon",
-      date: "Coming Soon",
-      desc: "Details will be announced soon.",
-      gradient: "from-fast-purple/90 to-fast-magenta/90",
-    },
-  ];
+  const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
+  const [contactStatus, setContactStatus] = useState("");
+  const apiBase = (import.meta.env.VITE_API_BASE || "").replace(/\/$/, "");
+  const contactUrl = apiBase ? `${apiBase}/api/contact` : "/api/contact";
+
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+    if (!contactForm.name || !contactForm.email || !contactForm.message) {
+      setContactStatus("Please fill in all fields.");
+      return;
+    }
+    setContactStatus("Sending...");
+    try {
+      const response = await fetch(contactUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactForm),
+      });
+      if (!response.ok) throw new Error("Failed");
+      setContactStatus("Submitted. We'll get back soon.");
+      setContactForm({ name: "", email: "", message: "" });
+    } catch (error) {
+      setContactStatus("Backend offline. Use LinkedIn or Instagram.");
+    }
+  };
 
   const placeholderProjects = [
     {
@@ -338,7 +345,7 @@ const App = () => {
       >
         <div className="mx-auto flex w-[92%] max-w-6xl items-center justify-between py-4">
           <a href="#/home" className="flex items-center gap-3">
-            <img src={fastLogo} alt="FAST logo" className="h-16 w-auto logo-glow logo-glow-hover" />
+            <span className="font-heading text-xl tracking-[0.35em] text-fast-neon">F.A.S.T</span>
           </a>
           <nav className="hidden items-center gap-6 text-sm md:flex">
             {NAV_ITEMS.map((item) => (
@@ -405,6 +412,8 @@ const App = () => {
         {route === "home" && (
         <section id="home" className="section-wrap grid-bg pt-32">
           <div className="absolute inset-0 bg-gradient-to-b from-fast-black/40 via-fast-black/70 to-fast-black/95" />
+          <div className="absolute -right-24 top-24 h-72 w-72 rounded-full spiral-bg opacity-45" />
+          <div className="absolute -left-20 bottom-16 h-56 w-56 rounded-full spiral-bg opacity-30" />
           <div className="relative mx-auto grid w-[92%] max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <motion.div
               variants={fadeUp}
@@ -426,7 +435,7 @@ const App = () => {
                 </h1>
                 <p className="mt-2 text-xl font-heading text-fast-neon">Futuristic AI Society of Tech</p>
                 <p className="mt-2 text-sm uppercase tracking-[0.35em] text-fast-neon">
-                  AI. GPU. Accelerate.
+                  Compute. Train. Accelerate.
                 </p>
               </div>
               <p className="max-w-xl text-fast-mist">
@@ -611,10 +620,20 @@ const App = () => {
                   transition={{ duration: 0.6, ease: "easeOut" }}
                   className="glass-card overflow-hidden rounded-3xl"
                 >
-                  <div className="relative h-40 w-full bg-gradient-to-br from-fast-slate/90 via-fast-black/80 to-fast-black/80">
+                  <div className="relative h-40 w-full overflow-hidden bg-gradient-to-br from-fast-slate/90 via-fast-black/80 to-fast-black/80">
+                    {event.poster ? (
+                      <img
+                        src={event.poster}
+                        alt={`${event.title} poster`}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        onError={(event) => {
+                          event.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : null}
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(34,255,136,0.22),_transparent_60%)]" />
                     <div className="absolute inset-0 flex items-center justify-center text-xs uppercase tracking-[0.35em] text-fast-mist">
-                      {event.image} — TBA
+                      {event.poster ? "Fastathon Poster" : `${event.image} - TBA`}
                     </div>
                   </div>
                   <div className="border-b border-fast-neon/15 bg-fast-black/40 p-6">
@@ -635,6 +654,13 @@ const App = () => {
                     </div>
                     <p className="mt-2 text-xs uppercase tracking-[0.25em] text-fast-mist">{event.meta}</p>
                     <p className="mt-3 text-sm text-fast-mist">{event.desc}</p>
+                    {event.details ? (
+                      <ul className="mt-3 space-y-1 text-xs text-fast-mist">
+                        {event.details.map((detail) => (
+                          <li key={detail}>• {detail}</li>
+                        ))}
+                      </ul>
+                    ) : null}
                     <div className="mt-6 flex flex-wrap gap-3">
                       <button
                         type="button"
@@ -654,36 +680,6 @@ const App = () => {
                   </div>
                 </motion.div>
               ))}
-            </div>
-            <div className="mt-12">
-              <h3 className="text-center font-heading text-2xl text-fast-cyan">Event Timeline</h3>
-              <div className="relative mt-10 grid gap-6 lg:grid-cols-2">
-                <div className="absolute left-1/2 hidden h-full w-px -translate-x-1/2 bg-fast-cyan/40 lg:block" />
-                {eventTimeline.map((item, index) => (
-                  <motion.div
-                    key={item.title}
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className={`relative overflow-hidden rounded-3xl border border-fast-neon/20 bg-gradient-to-r ${item.gradient} p-6 text-white shadow-deep lg:${
-                      index % 2 === 0 ? "mr-12" : "ml-12"
-                    }`}
-                  >
-                    <span
-                      className={`absolute top-1/2 hidden h-4 w-4 -translate-y-1/2 rounded-full border-2 border-fast-cyan bg-fast-black lg:block ${
-                        index % 2 === 0 ? "-right-10" : "-left-10"
-                      }`}
-                    />
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-heading text-lg">{item.title}</h4>
-                      <span className="text-xs uppercase tracking-[0.2em] text-white/80">{item.date}</span>
-                    </div>
-                    <p className="mt-3 text-sm text-white/80">{item.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
             </div>
           </div>
         </section>
@@ -940,37 +936,92 @@ const App = () => {
               description="For collaborations and updates, reach us on our official social channels."
               center
             />
-            <div className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2">
-              <motion.a
+            <div className="mx-auto mt-10 grid max-w-5xl gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+              <motion.form
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                href="https://www.linkedin.com/company/fastsrm"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass-card rounded-3xl p-6 text-center"
+                onSubmit={handleContactSubmit}
+                className="glass-card rounded-3xl p-6"
               >
-                <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">LinkedIn</p>
-                <h3 className="mt-3 font-heading text-2xl text-white">FAST SRM</h3>
-                <p className="mt-2 text-sm text-fast-mist">Industry updates, partnerships, and collaborations.</p>
-              </motion.a>
-              <motion.a
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                href="https://www.instagram.com/fast_srm"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass-card rounded-3xl p-6 text-center"
-              >
-                <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">Instagram</p>
-                <h3 className="mt-3 font-heading text-2xl text-white">@fast_srm</h3>
-                <p className="mt-2 text-sm text-fast-mist">Club highlights, workshops, and event drops.</p>
-              </motion.a>
+                <h3 className="font-heading text-lg text-fast-neon">Send a Query</h3>
+                <p className="mt-2 text-sm text-fast-mist">
+                  Keep it short. We will respond on your preferred channel.
+                </p>
+                <div className="mt-6 space-y-4">
+                  <input
+                    type="text"
+                    placeholder="Full name"
+                    value={contactForm.name}
+                    onChange={(event) =>
+                      setContactForm((prev) => ({ ...prev, name: event.target.value }))
+                    }
+                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email address"
+                    value={contactForm.email}
+                    onChange={(event) =>
+                      setContactForm((prev) => ({ ...prev, email: event.target.value }))
+                    }
+                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
+                  />
+                  <textarea
+                    rows="4"
+                    placeholder="Your query"
+                    value={contactForm.message}
+                    onChange={(event) =>
+                      setContactForm((prev) => ({ ...prev, message: event.target.value }))
+                    }
+                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
+                  />
+                  <button
+                    type="submit"
+                    className="w-full rounded-full bg-gradient-to-r from-fast-nvidia to-fast-neon px-4 py-3 text-xs font-semibold text-fast-black ripple-btn"
+                    onClick={handleRipple}
+                  >
+                    Submit Query
+                  </button>
+                </div>
+                {contactStatus ? <p className="mt-3 text-xs text-fast-mist">{contactStatus}</p> : null}
+                <p className="mt-4 text-xs text-fast-mist">Email: fast@srmist.edu.in</p>
+              </motion.form>
+
+              <div className="grid gap-6">
+                <motion.a
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  href="https://www.linkedin.com/company/fastsrm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass-card rounded-3xl p-6 text-center"
+                >
+                  <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">LinkedIn</p>
+                  <h3 className="mt-3 font-heading text-2xl text-white">FAST SRM</h3>
+                  <p className="mt-2 text-sm text-fast-mist">Industry updates and collaborations.</p>
+                </motion.a>
+                <motion.a
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  href="https://www.instagram.com/fast_srm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass-card rounded-3xl p-6 text-center"
+                >
+                  <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">Instagram</p>
+                  <h3 className="mt-3 font-heading text-2xl text-white">@fast_srm</h3>
+                  <p className="mt-2 text-sm text-fast-mist">Club highlights and event drops.</p>
+                </motion.a>
+              </div>
             </div>
           </div>
         </section>
@@ -1021,6 +1072,8 @@ const App = () => {
 };
 
 export default App;
+
+
 
 
 
