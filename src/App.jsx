@@ -9,22 +9,12 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
-const fallbackNews = [
-  {
-    title: "Tech News Feed Offline",
-    desc: "Add VITE_GNEWS_API_KEY in a .env file to enable live news.",
-    url: "",
-  },
-];
-
 const NAV_ITEMS = [
   { label: "Home", path: "home" },
   { label: "About", path: "about" },
   { label: "Domains", path: "domains" },
   { label: "Events", path: "events" },
-  { label: "Resources", path: "resources" },
   { label: "Projects", path: "projects" },
-  { label: "Chat", path: "chat" },
   { label: "Team", path: "team" },
   { label: "Contact", path: "contact" },
 ];
@@ -59,8 +49,16 @@ const IconBadge = ({ label }) => (
 
 const Snowfall = () => {
   const canvasRef = useRef(null);
+  const [enabled, setEnabled] = useState(true);
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.innerWidth < 768;
+    if (prefersReduced || isMobile) {
+      setEnabled(false);
+      return undefined;
+    }
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -68,7 +66,7 @@ const Snowfall = () => {
     let height = 0;
     let particles = [];
     let animationId = null;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotion = prefersReduced;
 
     const createParticle = () => ({
       x: Math.random() * width,
@@ -89,8 +87,7 @@ const Snowfall = () => {
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const baseCount = Math.round((width * height) / 32000);
-      const isMobile = width < 768;
-      const count = reducedMotion ? 18 : isMobile ? 24 : Math.max(30, Math.min(110, baseCount));
+      const count = reducedMotion ? 18 : Math.max(30, Math.min(110, baseCount));
       particles = Array.from({ length: count }, createParticle);
     };
 
@@ -132,6 +129,7 @@ const Snowfall = () => {
     };
   }, []);
 
+  if (!enabled) return null;
   return <canvas id="snow-canvas" ref={canvasRef} aria-hidden="true" />;
 };
 
@@ -205,53 +203,6 @@ const App = () => {
     target.appendChild(circle);
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const apiBase = import.meta.env.VITE_API_BASE || "";
-    const backendUrl = `${apiBase}/api/news`;
-    const apiKey = import.meta.env.VITE_GNEWS_API_KEY;
-
-    const applyItems = (items, status) => {
-      if (items.length) {
-        setNewsItems(items);
-        setNewsStatus(status);
-      } else {
-        setNewsItems(fallbackNews);
-        setNewsStatus("empty");
-      }
-    };
-
-    const fetchBackend = async () => {
-      const response = await fetch(backendUrl, { signal: controller.signal });
-      if (!response.ok) throw new Error("Backend news fetch failed");
-      const data = await response.json();
-      applyItems(data?.items || [], "live");
-    };
-
-    const fetchDirect = async () => {
-      if (!apiKey) throw new Error("Missing key");
-      const url = `https://gnews.io/api/v4/top-headlines?topic=technology&lang=en&max=3&token=${apiKey}`;
-      const response = await fetch(url, { signal: controller.signal });
-      if (!response.ok) throw new Error("News fetch failed");
-      const data = await response.json();
-      const items =
-        data?.articles?.slice(0, 3).map((item) => ({
-          title: item.title,
-          desc: item.description || "Read the latest update.",
-          url: item.url,
-        })) || [];
-      applyItems(items, "direct");
-    };
-
-    fetchBackend().catch(() => {
-      fetchDirect().catch(() => {
-        setNewsItems(fallbackNews);
-        setNewsStatus("missing");
-      });
-    });
-
-    return () => controller.abort();
-  }, []);
 
   const stats = useMemo(
     () => [
@@ -262,24 +213,6 @@ const App = () => {
     ],
     []
   );
-
-  const featureCards = [
-    {
-      title: "FAST Paced Courses",
-      desc: "Deep dives into AI, GPU computing, and systems engineering.",
-      icon: "CRS",
-    },
-    {
-      title: "Hackathons",
-      desc: "Compete and collaborate on NVIDIA-accelerated challenges.",
-      icon: "HACK",
-    },
-    {
-      title: "Expert Talk Sessions",
-      desc: "Quick, intensive sessions led by AI practitioners.",
-      icon: "TALK",
-    },
-  ];
 
   const aboutCards = [
     {
@@ -394,29 +327,6 @@ const App = () => {
     },
   ];
 
-  const recentActivity = [
-    { title: "NVIDIA DLI Workshop Wrapped", date: "28 Feb 2026" },
-    { title: "Fastathon (Month of March)", date: "March 2026" },
-  ];
-
-  const [newsItems, setNewsItems] = useState(fallbackNews);
-  const [newsStatus, setNewsStatus] = useState("missing");
-  const [chatInput, setChatInput] = useState("");
-  const [chatStatus, setChatStatus] = useState("");
-  const [chatMessages, setChatMessages] = useState([
-    { from: "student", text: "Hey FAST, how do I join the community?" },
-    {
-      from: "fast",
-      text: "Drop your details in the query form and our core team will get back soon.",
-    },
-  ]);
-  const [queryForm, setQueryForm] = useState({
-    name: "",
-    email: "",
-    topic: "Membership",
-    message: "",
-  });
-  const [queryStatus, setQueryStatus] = useState("");
   const [contactForm, setContactForm] = useState({
     name: "",
     email: "",
@@ -439,47 +349,6 @@ const App = () => {
       throw new Error(`Request failed (${response.status})`);
     }
     return response.json();
-  };
-
-  const handleChatSend = async () => {
-    const message = chatInput.trim();
-    if (!message) return;
-    setChatMessages((prev) => [...prev, { from: "student", text: message }]);
-    setChatInput("");
-    setChatStatus("Sending...");
-    try {
-      const data = await sendApiRequest("/api/chat", { message });
-      setChatMessages((prev) => [
-        ...prev,
-        { from: "fast", text: data?.reply || "Thanks! We will get back shortly." },
-      ]);
-      setChatStatus("Sent");
-    } catch (error) {
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          from: "fast",
-          text: "Message queued locally. Start the backend to enable live replies.",
-        },
-      ]);
-      setChatStatus("Offline");
-    }
-  };
-
-  const handleQuerySubmit = async (event) => {
-    event.preventDefault();
-    if (!queryForm.name || !queryForm.email || !queryForm.message) {
-      setQueryStatus("Please fill in name, email, and message.");
-      return;
-    }
-    setQueryStatus("Submitting...");
-    try {
-      await sendApiRequest("/api/query", queryForm);
-      setQueryStatus("Query submitted. We'll reply within 48 hours.");
-      setQueryForm({ name: "", email: "", topic: "Membership", message: "" });
-    } catch (error) {
-      setQueryStatus("Backend offline. Start the server to accept queries.");
-    }
   };
 
   const handleContactSubmit = async () => {
@@ -668,8 +537,8 @@ const App = () => {
                   />
                 </h1>
                 <p className="mt-2 text-xl font-heading text-fast-neon">Futuristic AI Society of Tech</p>
-                <p className="mt-2 text-sm uppercase tracking-[0.4em] text-fast-neon">
-                  Think.Build.Innovate THE F.A.S.T WAY
+                <p className="mt-2 text-sm uppercase tracking-[0.35em] text-fast-neon">
+                  AI. GPU. Accelerate.
                 </p>
               </div>
               <p className="max-w-xl text-fast-mist">
@@ -706,14 +575,8 @@ const App = () => {
                   </div>
                 ))}
               </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                {featureCards.map((card) => (
-                  <div key={card.title} className="glass-card rounded-2xl p-4">
-                    <IconBadge label={card.icon} />
-                    <h3 className="mt-3 font-heading text-sm">{card.title}</h3>
-                    <p className="mt-2 text-xs text-fast-mist">{card.desc}</p>
-                  </div>
-                ))}
+              <div className="rounded-2xl border border-fast-neon/20 bg-fast-deep/70 px-5 py-4 text-sm text-fast-mist">
+                NVIDIA-backed learning, research, and GPU-first innovation at SRMIST.
               </div>
             </motion.div>
 
@@ -726,9 +589,7 @@ const App = () => {
             >
               <div className="glass-card rounded-3xl p-6 text-center">
                 <p className="text-xs uppercase tracking-[0.4em] text-fast-nvidia">Partnered With</p>
-                <div className="mt-4 flex items-center justify-center gap-4">
-                  <img src={fastLogo} alt="FAST" className="h-12 logo-glow" />
-                  <span className="text-fast-neon text-xl">x</span>
+                <div className="mt-5 flex items-center justify-center">
                   <img src={nvidiaLogo} alt="NVIDIA" className="h-16 logo-glow" />
                 </div>
                 <p className="mt-4 text-sm text-fast-mist">
@@ -916,82 +777,6 @@ const App = () => {
         </section>
         )}
 
-        {route === "resources" && (
-        <section id="resources" className="section-wrap">
-          <div className="mx-auto w-[92%] max-w-6xl">
-            <SectionHeading
-              eyebrow="Resources"
-              title="FAST Learning Hub"
-              description="Practice, build, and stay updated with FAST's live learning utilities."
-            />
-            <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="glass-card rounded-3xl p-6"
-              >
-                <h3 className="font-heading text-lg text-fast-cyan">Recent Activity</h3>
-                <div className="mt-4 space-y-4 text-sm text-fast-mist">
-                  {recentActivity.map((item) => (
-                    <div key={item.title} className="flex items-start gap-3">
-                      <span className="mt-1 h-2 w-2 rounded-full bg-fast-cyan" />
-                      <div>
-                        <div className="text-white">{item.title}</div>
-                        <div className="text-xs text-fast-mist">{item.date}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="glass-card rounded-3xl p-6"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="font-heading text-lg text-fast-cyan">Tech News Feed</h3>
-                  <span className="rounded-full border border-fast-cyan/30 bg-fast-black/40 px-3 py-1 text-xs text-fast-cyan">
-                    {newsStatus === "live" || newsStatus === "direct" ? "Live" : "System"}
-                  </span>
-                </div>
-                <p className="mt-3 text-xs text-fast-mist">
-                  {newsStatus === "live"
-                    ? "Live updates powered by the FAST backend."
-                    : newsStatus === "direct"
-                    ? "Live updates from GNews (client-side)."
-                    : "Backend or key missing. Showing fallback."}
-                </p>
-                <div className="mt-4 space-y-4 text-sm text-fast-mist">
-                  {newsItems.map((news) => (
-                    <div key={news.title}>
-                      <div className="text-white">{news.title}</div>
-                      <div className="mt-2">{news.desc}</div>
-                      {news.url ? (
-                        <a
-                          href={news.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-3 inline-flex items-center gap-2 text-fast-cyan"
-                        >
-                          Read More <span aria-hidden="true">-&gt;</span>
-                        </a>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-        )}
-
         {route === "projects" && (
         <section id="projects" className="section-wrap">
           <div className="mx-auto w-[92%] max-w-6xl">
@@ -1022,144 +807,6 @@ const App = () => {
                   </div>
                 </motion.div>
               ))}
-            </div>
-          </div>
-        </section>
-        )}
-
-        {route === "chat" && (
-        <section id="chat" className="section-wrap">
-          <div className="mx-auto w-[92%] max-w-6xl">
-            <SectionHeading
-              eyebrow="General Chat"
-              title="FAST Open Desk"
-              description="A simple landing page for real-time questions and structured queries. Chat with FAST or submit a request for collaborations, workshops, or partnerships."
-            />
-            <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="glass-card relative overflow-hidden rounded-3xl p-6"
-              >
-                <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-fast-neon/15 blur-3xl" />
-                <div className="flex items-center justify-between">
-                  <h3 className="font-heading text-lg">FAST General Chat</h3>
-                  <span className="rounded-full border border-fast-neon/30 bg-fast-emerald/50 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-fast-neon">
-                    Live Beta
-                  </span>
-                </div>
-                <div className="mt-6 space-y-4">
-                  {chatMessages.map((item, index) => (
-                    <div
-                      key={`${item.from}-${index}`}
-                      className={`rounded-2xl border p-4 ${
-                        item.from === "fast"
-                          ? "border-fast-neon/30 bg-fast-emerald/40"
-                          : "border-fast-neon/20 bg-fast-black/40"
-                      }`}
-                    >
-                      <p
-                        className={`text-[0.65rem] uppercase tracking-[0.3em] ${
-                          item.from === "fast" ? "text-fast-neon" : "text-fast-mist"
-                        }`}
-                      >
-                        {item.from === "fast" ? "FAST" : "Student"}
-                      </p>
-                      <p className="mt-2 text-sm text-white">{item.text}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 flex flex-col gap-3 rounded-3xl border border-fast-neon/30 bg-fast-deep/70 px-4 py-4 text-sm text-fast-mist">
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="text"
-                      value={chatInput}
-                      onChange={(event) => setChatInput(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") handleChatSend();
-                      }}
-                      placeholder="Type a message..."
-                      className="flex-1 bg-transparent text-white placeholder-fast-mist outline-none"
-                    />
-                    <button
-                      type="button"
-                      className="rounded-full bg-gradient-to-r from-fast-neon to-fast-glow px-4 py-2 text-xs font-semibold text-fast-black ripple-btn"
-                      onClick={(event) => {
-                        handleRipple(event);
-                        handleChatSend();
-                      }}
-                    >
-                      Send
-                    </button>
-                  </div>
-                  {chatStatus ? <span className="text-xs text-fast-mist">{chatStatus}</span> : null}
-                </div>
-              </motion.div>
-
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="glass-card relative overflow-hidden rounded-3xl p-6"
-              >
-                <div className="absolute -left-12 -bottom-16 h-48 w-48 rounded-full bg-fast-glow/15 blur-3xl" />
-                <h3 className="font-heading text-lg">Send a Query</h3>
-                <p className="mt-2 text-sm text-fast-mist">We will respond to all queries within 48 hours.</p>
-                <form className="mt-6 space-y-4" onSubmit={handleQuerySubmit}>
-                  <input
-                    type="text"
-                    placeholder="Full name"
-                    value={queryForm.name}
-                    onChange={(event) =>
-                      setQueryForm((prev) => ({ ...prev, name: event.target.value }))
-                    }
-                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email address"
-                    value={queryForm.email}
-                    onChange={(event) =>
-                      setQueryForm((prev) => ({ ...prev, email: event.target.value }))
-                    }
-                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
-                  />
-                  <select
-                    value={queryForm.topic}
-                    onChange={(event) =>
-                      setQueryForm((prev) => ({ ...prev, topic: event.target.value }))
-                    }
-                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
-                  >
-                    <option>Membership</option>
-                    <option>Workshops</option>
-                    <option>Partnerships</option>
-                    <option>Projects</option>
-                  </select>
-                  <textarea
-                    rows="4"
-                    placeholder="Your query"
-                    value={queryForm.message}
-                    onChange={(event) =>
-                      setQueryForm((prev) => ({ ...prev, message: event.target.value }))
-                    }
-                    className="w-full rounded-xl border border-fast-neon/20 bg-fast-black/40 px-4 py-3 text-sm text-white placeholder-fast-mist focus:outline-none focus:ring-2 focus:ring-fast-neon/40"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full rounded-full bg-gradient-to-r from-fast-neon to-fast-glow px-4 py-3 text-xs font-semibold text-fast-black ripple-btn"
-                    onClick={handleRipple}
-                  >
-                    Submit Query
-                  </button>
-                </form>
-                {queryStatus ? <p className="mt-4 text-xs text-fast-mist">{queryStatus}</p> : null}
-              </motion.div>
             </div>
           </div>
         </section>
@@ -1480,5 +1127,7 @@ const App = () => {
 };
 
 export default App;
+
+
 
 
