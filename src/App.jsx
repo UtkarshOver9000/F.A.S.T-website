@@ -286,7 +286,7 @@ const App = () => {
       return;
     }
     const { start, end, location } = event.calendar;
-    const detailsLine = event.details ? `\\n${event.details.join(" | ")}` : "";
+    const detailsLine = event.details ? `\n${event.details.join(" | ")}` : "";
     const description = `${event.desc}${detailsLine}`;
     const ics = [
       "BEGIN:VCALENDAR",
@@ -299,15 +299,15 @@ const App = () => {
       `DTEND:${end}Z`,
       `SUMMARY:${event.title}`,
       `DESCRIPTION:${description}`,
-      `LOCATION:${location || \"SRMIST\"}`,
+      `LOCATION:${location || "SRMIST"}`,
       "END:VEVENT",
       "END:VCALENDAR",
-    ].join("\\n");
+    ].join("\n");
     const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${event.title.replace(/\\s+/g, \"-\").toLowerCase()}.ics`;
+    link.download = `${event.title.replace(/\s+/g, "-").toLowerCase()}.ics`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -323,7 +323,7 @@ const App = () => {
   };
 
   const handleGalleryClick = (item) => {
-    setGalleryStatus(`${item.title} — media drop coming soon.`);
+    setGalleryStatus(`${item.title} - media drop coming soon.`);
   };
 
   const handleContactSubmit = async (event) => {
