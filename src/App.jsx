@@ -215,7 +215,7 @@ const App = () => {
       status: "Coming Soon",
       icon: "IDE",
       image: "Fastathon Poster",
-      poster: "/assets/fastathon-poster.jpg",
+      poster: "/assets/fastathon-poster.png",
       details: ["Prize Pool: ₹60,000 + ₹3,00,000 NVIDIA Credits", "Register before March 19", "24-hour format"],
     },
   ];
