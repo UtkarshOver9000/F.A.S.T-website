@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
 const fastLogo = "/assets/fast-logo.png";
@@ -9,6 +9,17 @@ const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0 },
 };
+
+const CHIP_RAIN = [
+  { left: "6%", size: 22, delay: "0s", duration: "14s" },
+  { left: "18%", size: 28, delay: "2s", duration: "16s" },
+  { left: "32%", size: 20, delay: "4s", duration: "13s" },
+  { left: "48%", size: 26, delay: "1s", duration: "15s" },
+  { left: "62%", size: 24, delay: "3s", duration: "17s" },
+  { left: "74%", size: 30, delay: "5s", duration: "18s" },
+  { left: "86%", size: 18, delay: "2.5s", duration: "12s" },
+  { left: "94%", size: 22, delay: "6s", duration: "19s" },
+];
 
 const NAV_ITEMS = [
   { label: "Home", path: "home" },
@@ -56,6 +67,24 @@ const Preloader = ({ visible }) => (
       <img src={fastLogo} alt="FAST logo" className="logo-glow h-14 w-14 absolute" />
       <span className="font-heading text-xs tracking-[0.4em] text-fast-neon">INITIALIZING</span>
     </div>
+  </div>
+);
+
+const ChipRain = () => (
+  <div className="chip-rain" aria-hidden="true">
+    {CHIP_RAIN.map((chip, index) => (
+      <span
+        key={`chip-${index}`}
+        className="chip"
+        style={{
+          left: chip.left,
+          width: chip.size,
+          height: chip.size,
+          animationDelay: chip.delay,
+          animationDuration: chip.duration,
+        }}
+      />
+    ))}
   </div>
 );
 
@@ -184,28 +213,6 @@ const App = () => {
 
   const events = [
     {
-      type: "Workshop",
-      tag: "Workshop",
-      title: "NVIDIA DLI Workshop",
-      meta: "SRMIST Kattankulathur",
-      date: "Coming Soon",
-      desc: "Official NVIDIA Deep Learning Institute hands-on workshop with certified training.",
-      status: "Coming Soon",
-      icon: "CAL",
-      image: "Workshop Visual",
-    },
-    {
-      type: "Bootcamp",
-      tag: "Bootcamp",
-      title: "AI Bootcamp",
-      meta: "SRMIST Tech Hub",
-      date: "Coming Soon",
-      desc: "Intensive hands-on bootcamp covering neural networks, transformers, and deployments.",
-      status: "Coming Soon",
-      icon: "CPU",
-      image: "Bootcamp Visual",
-    },
-    {
       type: "Hackathon",
       tag: "Hackathon",
       title: "Fastathon",
@@ -217,6 +224,36 @@ const App = () => {
       image: "Fastathon Poster",
       poster: "/assets/fastathon-poster.png",
       details: ["Prize Pool: ₹60,000 + ₹3,00,000 NVIDIA Credits", "Register before March 19", "24-hour format"],
+      calendar: {
+        start: "20260324T090000",
+        end: "20260325T090000",
+        location: "Tech Park 2, Room 712, SRMIST",
+      },
+      learnMore: "/assets/fastathon-poster.png",
+    },
+    {
+      type: "Workshop",
+      tag: "Workshop",
+      title: "NVIDIA DLI Workshop",
+      meta: "SRMIST Kattankulathur",
+      date: "Coming Soon",
+      desc: "Official NVIDIA Deep Learning Institute hands-on workshop with certified training.",
+      status: "Coming Soon",
+      icon: "CAL",
+      image: "Workshop Visual",
+      learnMore: "#/contact",
+    },
+    {
+      type: "Bootcamp",
+      tag: "Bootcamp",
+      title: "AI Bootcamp",
+      meta: "SRMIST Tech Hub",
+      date: "Coming Soon",
+      desc: "Intensive hands-on bootcamp covering neural networks, transformers, and deployments.",
+      status: "Coming Soon",
+      icon: "CPU",
+      image: "Bootcamp Visual",
+      learnMore: "#/contact",
     },
   ];
 
@@ -238,8 +275,55 @@ const App = () => {
 
   const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
   const [contactStatus, setContactStatus] = useState("");
+  const [eventNotice, setEventNotice] = useState({});
+  const [galleryStatus, setGalleryStatus] = useState("");
   const apiBase = (import.meta.env.VITE_API_BASE || "").replace(/\/$/, "");
   const contactUrl = apiBase ? `${apiBase}/api/contact` : "/api/contact";
+
+  const handleAddToCalendar = (event) => {
+    if (!event.calendar) {
+      setEventNotice((prev) => ({ ...prev, [event.title]: "Calendar details coming soon." }));
+      return;
+    }
+    const { start, end, location } = event.calendar;
+    const description = `${event.desc} ${event.details ? `\\n${event.details.join(\" | \")}` : \"\"}`;
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//FAST//Events//EN",
+      "BEGIN:VEVENT",
+      `UID:${Date.now()}@fastsrm`,
+      `DTSTAMP:${start}Z`,
+      `DTSTART:${start}Z`,
+      `DTEND:${end}Z`,
+      `SUMMARY:${event.title}`,
+      `DESCRIPTION:${description}`,
+      `LOCATION:${location || \"SRMIST\"}`,
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\\n");
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${event.title.replace(/\\s+/g, \"-\").toLowerCase()}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleLearnMore = (event) => {
+    if (event.learnMore) {
+      window.open(event.learnMore, "_blank", "noopener,noreferrer");
+      return;
+    }
+    setEventNotice((prev) => ({ ...prev, [event.title]: "Details will be announced soon." }));
+  };
+
+  const handleGalleryClick = (item) => {
+    setGalleryStatus(`${item.title} — media drop coming soon.`);
+  };
 
   const handleContactSubmit = async (event) => {
     event.preventDefault();
@@ -386,26 +470,49 @@ const App = () => {
             </button>
           </div>
         </div>
-        {menuOpen ? (
-          <div className="md:hidden">
-            <div className="mx-auto w-[92%] max-w-6xl rounded-2xl border border-fast-neon/20 bg-fast-deep/95 p-6 text-sm shadow-deep">
-              <div className="flex flex-col gap-4">
-                {NAV_ITEMS.map((item) => (
-                  <a
-                    key={item.label}
-                    href={`#/${item.path}`}
-                    className={`transition ${
-                      route === item.path ? "text-white" : "text-fast-mist hover:text-white"
-                    }`}
+        <AnimatePresence>
+          {menuOpen ? (
+            <motion.div
+              className="fixed inset-0 z-40 flex justify-end bg-fast-black/70 backdrop-blur-sm md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                initial={{ clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)" }}
+                animate={{ clipPath: "polygon(20% 0, 100% 0, 100% 100%, 0 100%)" }}
+                exit={{ clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)" }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="h-full w-[78%] border-l border-fast-neon/20 bg-fast-deep/95 p-8 text-sm shadow-deep"
+              >
+                <div className="mb-8 flex items-center justify-between">
+                  <span className="font-heading text-lg tracking-[0.3em] text-fast-neon">MENU</span>
+                  <button
+                    type="button"
+                    className="rounded-full border border-fast-neon/30 px-3 py-1 text-xs text-fast-neon"
                     onClick={() => setMenuOpen(false)}
                   >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : null}
+                    CLOSE
+                  </button>
+                </div>
+                <div className="flex flex-col gap-5">
+                  {NAV_ITEMS.map((item) => (
+                    <a
+                      key={item.label}
+                      href={`#/${item.path}`}
+                      className={`transition ${
+                        route === item.path ? "text-white" : "text-fast-mist hover:text-white"
+                      }`}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </header>
 
       <main className="relative z-10">
@@ -414,6 +521,7 @@ const App = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-fast-black/40 via-fast-black/70 to-fast-black/95" />
           <div className="absolute -right-24 top-24 h-72 w-72 rounded-full spiral-bg opacity-45" />
           <div className="absolute -left-20 bottom-16 h-56 w-56 rounded-full spiral-bg opacity-30" />
+          <ChipRain />
           <div className="relative mx-auto grid w-[92%] max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <motion.div
               variants={fadeUp}
@@ -590,7 +698,7 @@ const App = () => {
           <div className="mx-auto w-[92%] max-w-6xl">
             <SectionHeading
               eyebrow="Upcoming"
-              title="Upcoming Events"
+              title="Events"
               description="Join us for NVIDIA-powered workshops, competitions, and learning experiences."
             />
             <div className="mb-8 flex flex-wrap gap-3 text-xs uppercase tracking-[0.3em]">
@@ -665,18 +773,27 @@ const App = () => {
                       <button
                         type="button"
                         className="rounded-full border border-fast-neon/30 bg-fast-deep/70 px-4 py-2 text-xs font-semibold text-fast-mist ripple-btn"
-                        onClick={handleRipple}
+                        onClick={(eventClick) => {
+                          handleRipple(eventClick);
+                          handleAddToCalendar(event);
+                        }}
                       >
                         Add to Calendar
                       </button>
                       <button
                         type="button"
                         className="rounded-full bg-fast-cyan px-4 py-2 text-xs font-semibold text-fast-black ripple-btn"
-                        onClick={handleRipple}
+                        onClick={(eventClick) => {
+                          handleRipple(eventClick);
+                          handleLearnMore(event);
+                        }}
                       >
                         Learn More
                       </button>
                     </div>
+                    {eventNotice[event.title] ? (
+                      <p className="mt-3 text-xs text-fast-mist">{eventNotice[event.title]}</p>
+                    ) : null}
                   </div>
                 </motion.div>
               ))}
@@ -693,6 +810,9 @@ const App = () => {
               title="FAST Visual Archive"
               description="Snapshots from workshops, labs, and hackathons. Media drops coming soon."
             />
+            {galleryStatus ? (
+              <p className="mb-6 text-sm text-fast-mist">{galleryStatus}</p>
+            ) : null}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {galleryItems.map((item) => (
                 <motion.div
@@ -703,6 +823,12 @@ const App = () => {
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
                   className="group relative overflow-hidden rounded-3xl border border-fast-neon/20 bg-fast-black/50"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => handleGalleryClick(item)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") handleGalleryClick(item);
+                  }}
                 >
                   <div className="h-48 w-full bg-gradient-to-br from-fast-emerald/30 via-fast-black/80 to-fast-black/90" />
                   <div className="absolute inset-0 flex flex-col justify-end p-5">
