@@ -459,60 +459,57 @@ const App = () => {
             </a>
             <button
               type="button"
-              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-deep/70 md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-deep/70 md:hidden"
               onClick={() => setMenuOpen((prev) => !prev)}
               aria-label="Toggle navigation"
             >
-              <span className="absolute h-8 w-8 rounded-full border border-fast-neon/50" />
-              <span className="absolute h-2 w-2 rounded-full bg-fast-neon shadow-glow" />
+              <div className="flex flex-col gap-1">
+                <span className="h-0.5 w-5 bg-fast-neon" />
+                <span className="h-0.5 w-5 bg-fast-neon" />
+                <span className="h-0.5 w-5 bg-fast-neon" />
+              </div>
             </button>
           </div>
         </div>
         <AnimatePresence>
           {menuOpen ? (
             <motion.div
-              className="fixed inset-0 z-40 flex items-center justify-center bg-fast-black/80 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-40 flex justify-end bg-fast-black/70 backdrop-blur-sm md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
               <motion.div
-                className="relative h-72 w-72 rounded-full border border-fast-neon/30 bg-fast-deep/70 shadow-deep"
-                initial={{ scale: 0.8, rotate: -20, opacity: 0 }}
-                animate={{ scale: 1, rotate: 0, opacity: 1 }}
-                exit={{ scale: 0.85, opacity: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="h-full w-[78%] border-l border-fast-neon/20 bg-fast-deep/95 p-8 text-sm shadow-deep"
               >
-                <button
-                  type="button"
-                  className="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-fast-neon/40 bg-fast-black text-xs text-fast-neon"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  CLOSE
-                </button>
-                {NAV_ITEMS.map((item, index) => {
-                  const angle = (360 / NAV_ITEMS.length) * index - 90;
-                  const rad = (Math.PI / 180) * angle;
-                  const radius = 118;
-                  const x = Math.cos(rad) * radius;
-                  const y = Math.sin(rad) * radius;
-                  return (
-                    <motion.a
+                <div className="mb-8 flex items-center justify-between">
+                  <span className="font-heading text-lg tracking-[0.3em] text-fast-neon">MENU</span>
+                  <button
+                    type="button"
+                    className="rounded-full border border-fast-neon/30 px-3 py-1 text-xs text-fast-neon"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    CLOSE
+                  </button>
+                </div>
+                <div className="flex flex-col gap-5">
+                  {NAV_ITEMS.map((item) => (
+                    <a
                       key={item.label}
                       href={`#/${item.path}`}
-                      className={`absolute left-1/2 top-1/2 rounded-full border border-fast-neon/30 bg-fast-black/80 px-3 py-2 text-[0.7rem] uppercase tracking-[0.22em] ${
-                        route === item.path ? "text-white" : "text-fast-mist"
+                      className={`transition ${
+                        route === item.path ? "text-white" : "text-fast-mist hover:text-white"
                       }`}
-                      style={{ transform: `translate(-50%, -50%) translate(${x}px, ${y}px)` }}
-                      initial={{ opacity: 0, scale: 0.6 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.05 * index }}
                       onClick={() => setMenuOpen(false)}
                     >
                       {item.label}
-                    </motion.a>
-                  );
-                })}
+                    </a>
+                  ))}
+                </div>
               </motion.div>
             </motion.div>
           ) : null}
