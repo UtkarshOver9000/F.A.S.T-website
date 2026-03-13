@@ -286,7 +286,8 @@ const App = () => {
       return;
     }
     const { start, end, location } = event.calendar;
-    const description = `${event.desc} ${event.details ? `\\n${event.details.join(\" | \")}` : \"\"}`;
+    const detailsLine = event.details ? `\\n${event.details.join(" | ")}` : "";
+    const description = `${event.desc}${detailsLine}`;
     const ics = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
