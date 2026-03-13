@@ -478,6 +478,7 @@ const App = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              onClick={() => setMenuOpen(false)}
             >
               <motion.div
                 initial={{ x: "100%" }}
@@ -485,16 +486,10 @@ const App = () => {
                 exit={{ x: "100%" }}
                 transition={{ duration: 0.35, ease: "easeOut" }}
                 className="h-full w-[78%] border-l border-fast-neon/20 bg-fast-deep/95 p-8 text-sm shadow-deep"
+                onClick={(event) => event.stopPropagation()}
               >
                 <div className="mb-8 flex items-center justify-between">
                   <span className="font-heading text-lg tracking-[0.3em] text-fast-neon">MENU</span>
-                  <button
-                    type="button"
-                    className="rounded-full border border-fast-neon/30 px-3 py-1 text-xs text-fast-neon"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    CLOSE
-                  </button>
                 </div>
                 <div className="flex flex-col gap-5">
                   {NAV_ITEMS.map((item) => (
