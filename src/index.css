@@ -104,6 +104,16 @@
     background-size: 70px 70px;
   }
 
+  .angled-card {
+    clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%, 4% 50%);
+  }
+
+  .hero-slab {
+    background: linear-gradient(135deg, rgba(15, 30, 26, 0.95), rgba(8, 15, 24, 0.95));
+    border: 1px solid rgba(34, 255, 136, 0.2);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+  }
+
   .logo-glow {
     filter: drop-shadow(0 0 18px rgba(0, 255, 166, 0.6));
   }
@@ -171,15 +181,6 @@
   }
 }
 
-#snow-canvas {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
 #preloader {
   position: fixed;
   inset: 0;
@@ -208,6 +209,12 @@
   to {
     transform: scale(4);
     opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .glass-card {
+    backdrop-filter: none;
   }
 }
 

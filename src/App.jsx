@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const fastLogo = "/assets/fast-logo.png";
 const nvidiaLogo = "/assets/nvidia-logo.png";
+const srmistLogo = "/assets/srmist-logo.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -14,6 +15,7 @@ const NAV_ITEMS = [
   { label: "About", path: "about" },
   { label: "Domains", path: "domains" },
   { label: "Events", path: "events" },
+  { label: "Gallery", path: "gallery" },
   { label: "Projects", path: "projects" },
   { label: "Team", path: "team" },
   { label: "Contact", path: "contact" },
@@ -46,92 +48,6 @@ const IconBadge = ({ label }) => (
     {label}
   </div>
 );
-
-const Snowfall = () => {
-  const canvasRef = useRef(null);
-  const [enabled, setEnabled] = useState(true);
-
-  useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isMobile = window.innerWidth < 768;
-    if (prefersReduced || isMobile) {
-      setEnabled(false);
-      return undefined;
-    }
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    let width = 0;
-    let height = 0;
-    let particles = [];
-    let animationId = null;
-    const reducedMotion = prefersReduced;
-
-    const createParticle = () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      r: Math.random() * 1.6 + 0.6,
-      vy: Math.random() * 0.6 + 0.2,
-      vx: Math.random() * 0.3 - 0.15,
-      alpha: Math.random() * 0.6 + 0.2,
-    });
-
-    const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const baseCount = Math.round((width * height) / 32000);
-      const count = reducedMotion ? 18 : Math.max(30, Math.min(110, baseCount));
-      particles = Array.from({ length: count }, createParticle);
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height);
-      ctx.shadowColor = "rgba(255, 255, 255, 0.6)";
-      ctx.shadowBlur = 8;
-      ctx.globalCompositeOperation = "lighter";
-
-      particles.forEach((p) => {
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-
-        p.y += p.vy;
-        p.x += p.vx;
-
-        if (p.y > height + 10) {
-          p.y = -10;
-          p.x = Math.random() * width;
-        }
-        if (p.x > width + 10) p.x = -10;
-        if (p.x < -10) p.x = width + 10;
-      });
-
-      if (!reducedMotion) {
-        animationId = requestAnimationFrame(draw);
-      }
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-    draw();
-
-    return () => {
-      window.removeEventListener("resize", resize);
-      if (animationId) cancelAnimationFrame(animationId);
-    };
-  }, []);
-
-  if (!enabled) return null;
-  return <canvas id="snow-canvas" ref={canvasRef} aria-hidden="true" />;
-};
 
 const Preloader = ({ visible }) => (
   <div id="preloader" className={visible ? "" : "hidden"} aria-hidden={!visible}>
@@ -276,6 +192,7 @@ const App = () => {
       desc: "Official NVIDIA Deep Learning Institute hands-on workshop with certified training.",
       status: "Coming Soon",
       icon: "CAL",
+      image: "Workshop Visual",
     },
     {
       type: "Bootcamp",
@@ -286,6 +203,7 @@ const App = () => {
       desc: "Intensive hands-on bootcamp covering neural networks, transformers, and deployments.",
       status: "Coming Soon",
       icon: "CPU",
+      image: "Bootcamp Visual",
     },
     {
       type: "Hackathon",
@@ -296,7 +214,17 @@ const App = () => {
       desc: "FAST's flagship hackathon - 24 hours of innovation, GPU challenges, and prizes.",
       status: "Coming Soon",
       icon: "IDE",
+      image: "Hackathon Visual",
     },
+  ];
+
+  const galleryItems = [
+    { title: "AI Lab Moments", caption: "Gallery drop — TBA" },
+    { title: "FAST Workshops", caption: "Coming soon" },
+    { title: "Fastathon Highlights", caption: "Coming soon" },
+    { title: "GPU Sessions", caption: "Coming soon" },
+    { title: "Team Sprints", caption: "Coming soon" },
+    { title: "Campus Collabs", caption: "Coming soon" },
   ];
 
   const eventFilters = ["All", "Workshop", "Bootcamp", "Hackathon"];
@@ -326,45 +254,6 @@ const App = () => {
       gradient: "from-fast-purple/90 to-fast-magenta/90",
     },
   ];
-
-  const [contactForm, setContactForm] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [contactStatus, setContactStatus] = useState("");
-
-
-  const apiBase = (import.meta.env.VITE_API_BASE || "").replace(/\/$/, "");
-  const buildApiUrl = (path) => (apiBase ? `${apiBase}${path}` : path);
-
-  const sendApiRequest = async (path, payload) => {
-    const response = await fetch(buildApiUrl(path), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      throw new Error(`Request failed (${response.status})`);
-    }
-    return response.json();
-  };
-
-  const handleContactSubmit = async () => {
-    if (!contactForm.name || !contactForm.email || !contactForm.message) {
-      setContactStatus("Please fill in name, email, and message.");
-      return;
-    }
-    setContactStatus("Sending...");
-    try {
-      await sendApiRequest("/api/contact", contactForm);
-      setContactStatus("Message sent. We'll get back soon.");
-      setContactForm({ name: "", email: "", subject: "", message: "" });
-    } catch (error) {
-      setContactStatus("Backend offline. Start the server to send messages.");
-    }
-  };
 
   const placeholderProjects = [
     {
@@ -441,7 +330,6 @@ const App = () => {
   return (
     <div className="relative overflow-hidden">
       <Preloader visible={loading} />
-      <Snowfall />
 
       <header
         className={`fixed top-0 z-30 w-full border-b transition-all ${
@@ -545,6 +433,24 @@ const App = () => {
                 Building the future of Artificial Intelligence, GPU Computing, and Systems Innovation at SRMIST
                 Kattankulathur.
               </p>
+              <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-fast-mist">
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-black/40">
+                  <img
+                    src={srmistLogo}
+                    alt="SRMIST"
+                    className="h-7 w-7 object-contain"
+                    onError={(event) => {
+                      event.currentTarget.style.display = "none";
+                      const fallback = event.currentTarget.nextSibling;
+                      if (fallback) fallback.style.display = "flex";
+                    }}
+                  />
+                  <span className="hidden text-[0.55rem] uppercase tracking-[0.2em] text-fast-mist">
+                    SRMIST
+                  </span>
+                </div>
+                SRMIST Kattankulathur
+              </div>
               <div className="flex flex-wrap gap-4">
                 <a
                   href="#/contact"
@@ -587,7 +493,7 @@ const App = () => {
               transition={{ duration: 0.9, ease: "easeOut", delay: 0.1 }}
               className="relative flex flex-col items-center gap-6"
             >
-              <div className="glass-card rounded-3xl p-6 text-center">
+              <div className="hero-slab angled-card rounded-3xl p-6 text-center">
                 <p className="text-xs uppercase tracking-[0.4em] text-fast-nvidia">Partnered With</p>
                 <div className="mt-5 flex items-center justify-center">
                   <img src={nvidiaLogo} alt="NVIDIA" className="h-16 logo-glow" />
@@ -705,7 +611,13 @@ const App = () => {
                   transition={{ duration: 0.6, ease: "easeOut" }}
                   className="glass-card overflow-hidden rounded-3xl"
                 >
-                  <div className="border-b border-fast-neon/15 bg-gradient-to-br from-fast-slate/90 via-fast-black/80 to-fast-black/80 p-6">
+                  <div className="relative h-40 w-full bg-gradient-to-br from-fast-slate/90 via-fast-black/80 to-fast-black/80">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(34,255,136,0.22),_transparent_60%)]" />
+                    <div className="absolute inset-0 flex items-center justify-center text-xs uppercase tracking-[0.35em] text-fast-mist">
+                      {event.image} — TBA
+                    </div>
+                  </div>
+                  <div className="border-b border-fast-neon/15 bg-fast-black/40 p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-fast-cyan/40 bg-fast-black/40 text-[0.65rem] font-heading text-fast-cyan">
                         {event.icon}
@@ -772,6 +684,38 @@ const App = () => {
                   </motion.div>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+        )}
+
+        {route === "gallery" && (
+        <section id="gallery" className="section-wrap">
+          <div className="mx-auto w-[92%] max-w-6xl">
+            <SectionHeading
+              eyebrow="Gallery"
+              title="FAST Visual Archive"
+              description="Snapshots from workshops, labs, and hackathons. Media drops coming soon."
+            />
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {galleryItems.map((item) => (
+                <motion.div
+                  key={item.title}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="group relative overflow-hidden rounded-3xl border border-fast-neon/20 bg-fast-black/50"
+                >
+                  <div className="h-48 w-full bg-gradient-to-br from-fast-emerald/30 via-fast-black/80 to-fast-black/90" />
+                  <div className="absolute inset-0 flex flex-col justify-end p-5">
+                    <p className="text-xs uppercase tracking-[0.3em] text-fast-mist">TBA</p>
+                    <h3 className="mt-2 font-heading text-lg text-white">{item.title}</h3>
+                    <p className="mt-2 text-sm text-fast-mist">{item.caption}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
@@ -964,6 +908,24 @@ const App = () => {
               <div className="rounded-full border border-fast-neon/30 bg-fast-deep/70 px-6 py-3 text-xs uppercase tracking-[0.3em] text-fast-neon">
                 NVIDIA Student Developer Ecosystem Partner
               </div>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-6">
+                <img src={nvidiaLogo} alt="NVIDIA" className="h-12 logo-glow" />
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-black/40">
+                  <img
+                    src={srmistLogo}
+                    alt="SRMIST"
+                    className="h-10 w-10 object-contain"
+                    onError={(event) => {
+                      event.currentTarget.style.display = "none";
+                      const fallback = event.currentTarget.nextSibling;
+                      if (fallback) fallback.style.display = "flex";
+                    }}
+                  />
+                  <span className="hidden text-[0.6rem] uppercase tracking-[0.2em] text-fast-mist">
+                    SRMIST
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -975,123 +937,40 @@ const App = () => {
             <SectionHeading
               eyebrow="Reach Out"
               title="Connect with FAST"
-              description="Initialize a conversation with FAST. Submit a query or contact the leadership team for collaborations."
+              description="For collaborations and updates, reach us on our official social channels."
               center
             />
-            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-              <motion.div
+            <div className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2">
+              <motion.a
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="glass-card rounded-3xl p-6"
+                href="https://www.linkedin.com/company/fastsrm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-card rounded-3xl p-6 text-center"
               >
-                <h3 className="font-heading text-lg text-fast-cyan">Initialize Connection</h3>
-                <div className="mt-6 rounded-2xl border border-fast-neon/20 bg-fast-black/40 p-4 font-mono text-sm text-fast-mist">
-                  <div className="mb-3">const userDetails = {"{"}</div>
-                  <div className="ml-4 flex flex-col gap-3">
-                    <label className="flex flex-wrap items-center gap-2">
-                      <span className="text-fast-cyan">name:</span>
-                      <input
-                        type="text"
-                        placeholder="type your name..."
-                        value={contactForm.name}
-                        onChange={(event) =>
-                          setContactForm((prev) => ({ ...prev, name: event.target.value }))
-                        }
-                        className="flex-1 bg-transparent outline-none placeholder-fast-mist"
-                      />
-                    </label>
-                    <label className="flex flex-wrap items-center gap-2">
-                      <span className="text-fast-cyan">email:</span>
-                      <input
-                        type="email"
-                        placeholder="enter your email..."
-                        value={contactForm.email}
-                        onChange={(event) =>
-                          setContactForm((prev) => ({ ...prev, email: event.target.value }))
-                        }
-                        className="flex-1 bg-transparent outline-none placeholder-fast-mist"
-                      />
-                    </label>
-                    <label className="flex flex-wrap items-center gap-2">
-                      <span className="text-fast-cyan">subject:</span>
-                      <input
-                        type="text"
-                        placeholder="query subject..."
-                        value={contactForm.subject}
-                        onChange={(event) =>
-                          setContactForm((prev) => ({ ...prev, subject: event.target.value }))
-                        }
-                        className="flex-1 bg-transparent outline-none placeholder-fast-mist"
-                      />
-                    </label>
-                    <label className="flex flex-wrap items-start gap-2">
-                      <span className="text-fast-cyan">message:</span>
-                      <textarea
-                        rows="3"
-                        placeholder="type your message..."
-                        value={contactForm.message}
-                        onChange={(event) =>
-                          setContactForm((prev) => ({ ...prev, message: event.target.value }))
-                        }
-                        className="flex-1 bg-transparent outline-none placeholder-fast-mist"
-                      />
-                    </label>
-                  </div>
-                  <div className="mt-3">{"}"}</div>
-                </div>
-                <button
-                  type="button"
-                  className="mt-6 w-full rounded-full bg-gradient-to-r from-fast-nvidia to-fast-neon px-4 py-3 text-xs font-semibold text-fast-black ripple-btn"
-                  onClick={(event) => {
-                    handleRipple(event);
-                    handleContactSubmit();
-                  }}
-                >
-                  FAST.sendMessage(userDetails)
-                </button>
-                {contactStatus ? <p className="mt-3 text-xs text-fast-mist">{contactStatus}</p> : null}
-              </motion.div>
-
-              <div className="grid gap-6">
-                {[
-                  {
-                    title: "Base Location",
-                    lines: [
-                      "F.A.S.T - SRMIST Kattankulathur",
-                      "SRM Institute of Science and Technology",
-                      "Chennai, Tamil Nadu",
-                    ],
-                  },
-                  {
-                    title: "Contact Database",
-                    lines: ["fast@srmist.edu.in", "Leadership: FAST Corporate Team"],
-                  },
-                  {
-                    title: "Social Network",
-                    lines: ["Instagram: @fast_srm", "LinkedIn: FAST SRM", "Discord: Coming Soon"],
-                  },
-                ].map((card) => (
-                  <motion.div
-                    key={card.title}
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="glass-card rounded-3xl p-6"
-                  >
-                    <h4 className="font-heading text-base text-fast-cyan">{card.title}</h4>
-                    <ul className="mt-3 space-y-2 text-sm text-fast-mist">
-                      {card.lines.map((line) => (
-                        <li key={line}>{line}</li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                ))}
-              </div>
+                <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">LinkedIn</p>
+                <h3 className="mt-3 font-heading text-2xl text-white">FAST SRM</h3>
+                <p className="mt-2 text-sm text-fast-mist">Industry updates, partnerships, and collaborations.</p>
+              </motion.a>
+              <motion.a
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                href="https://www.instagram.com/fast_srm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-card rounded-3xl p-6 text-center"
+              >
+                <p className="text-xs uppercase tracking-[0.4em] text-fast-mist">Instagram</p>
+                <h3 className="mt-3 font-heading text-2xl text-white">@fast_srm</h3>
+                <p className="mt-2 text-sm text-fast-mist">Club highlights, workshops, and event drops.</p>
+              </motion.a>
             </div>
           </div>
         </section>
@@ -1114,8 +993,23 @@ const App = () => {
               </a>
             ))}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <img src={nvidiaLogo} alt="NVIDIA" className="h-10 logo-glow" />
+            <div className="relative flex h-12 w-12 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-black/40">
+              <img
+                src={srmistLogo}
+                alt="SRMIST"
+                className="h-9 w-9 object-contain"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                  const fallback = event.currentTarget.nextSibling;
+                  if (fallback) fallback.style.display = "flex";
+                }}
+              />
+              <span className="hidden text-[0.55rem] uppercase tracking-[0.2em] text-fast-mist">
+                SRMIST
+              </span>
+            </div>
           </div>
         </div>
         <div className="mt-8 text-center text-xs text-fast-mist">
