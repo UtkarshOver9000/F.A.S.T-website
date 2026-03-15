@@ -419,7 +419,7 @@ const App = () => {
       >
         <div className="mx-auto flex w-[92%] max-w-7xl items-center justify-between">
           <a href="#/home" className="flex items-center gap-3 group">
-            <span className="font-heading text-2xl font-black tracking-tighter text-white group-hover:text-[#a6ff00] transition-colors">F.A.S.T</span>
+            <span className="tech-logo">F.A.S.T</span>
           </a>
           <nav className="hidden items-center gap-6 lg:gap-8 text-[0.62rem] font-bold uppercase tracking-[0.2em] md:flex">
             {NAV_ITEMS.map((item) => (
@@ -463,7 +463,7 @@ const App = () => {
         </div>
       </header>
 
-      <main className="relative z-10">
+      <main className={`relative z-10 ${route !== 'home' ? 'section-bg-tech' : ''}`}>
         {route === "home" && (
         <section id="home" className="section-wrap min-h-screen grid-bg flex items-center justify-center pt-24 pb-12 overflow-hidden bg-[#050505]">
           <ConstellationBackground />
