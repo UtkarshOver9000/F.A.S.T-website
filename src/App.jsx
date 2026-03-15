@@ -5,6 +5,7 @@ import { ConstellationBackground } from "./components/ui/ConstellationBackground
 const fastLogo = "/assets/fast-logo-icon.png";
 const nvidiaLogo = "/assets/nvidia-logo.png";
 const srmistLogo = "/assets/srmist-logo.png";
+const heroPoster = "/assets/fast poster.jpeg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -485,9 +486,9 @@ const App = () => {
               <div>
                 <h1 className="text-gradient text-shadow">
                   <img
-                    src={fastLogo}
-                    alt="FAST logo"
-                    className="h-20 w-auto scale-x-110 origin-left md:h-24 logo-glow"
+                    src={heroPoster}
+                    alt="FAST Poster"
+                    className="h-28 w-auto rounded-xl border border-fast-neon/20 shadow-glow md:h-32 logo-glow"
                   />
                 </h1>
                 <p className="mt-2 text-xl font-heading text-fast-neon">Futuristic AI Society of Tech</p>
