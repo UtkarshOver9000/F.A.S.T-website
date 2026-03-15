@@ -166,21 +166,25 @@ const App = () => {
       title: "What is FAST?",
       desc: "F.A.S.T. (Futuristic AI Society for Technology) is a student-led club at SRMIST that brings together curious minds to explore, build, and innovate with Artificial Intelligence.",
       icon: "AI",
+      image: "/assets/about-ai.png",
     },
     {
       title: "Our NVIDIA Partnership",
       desc: "As part of the NVIDIA Student Network, our members gain exclusive access to NVIDIA's Deep Learning Institute courses, expert workshops, and global networking opportunities.",
       icon: "NV",
+      image: "/assets/about-nvidia.png",
     },
     {
       title: "Join Our Research Team",
-      desc: "Join a vibrant community of researchers, creators, and problem-solvers. Here, you'll benefit from direct collaboration with renowned faculty and build a professional network of industry experts and talented peers who will challenge and support you.",
+      desc: "Join a vibrant community of researchers, creators, and problem-solvers. Here, you'll benefit from direct collaboration with renowned faculty and build a professional network.",
       icon: "RS",
+      image: "/assets/domain-tech.png",
     },
     {
       title: "What's in it for you?",
-      desc: "We host weekly ideathons, engaging activities, and interactive productivity events. At F.A.S.T., every session is designed to spark innovation while keeping the experience fun and collaborative.",
+      desc: "We host weekly ideathons, engaging activities, and interactive productivity events. At F.A.S.T., every session is designed to spark innovation while keeping the experience fun.",
       icon: "FY",
+      image: "/assets/domain-creatives.png",
     },
   ];
 
@@ -409,8 +413,8 @@ const App = () => {
       <Preloader visible={loading} />
 
       <header
-        className={`fixed top-0 z-[100] w-full transition-all duration-500 ${
-          scrolled ? "bg-black/60 backdrop-blur-2xl border-b border-white/5 py-4" : "bg-transparent py-6"
+        className={`fixed top-0 z-[9999] w-full transition-all duration-500 ${
+          scrolled ? "bg-black/80 backdrop-blur-2xl border-b border-white/5 py-4" : "bg-transparent py-6"
         }`}
       >
         <div className="mx-auto flex w-[92%] max-w-7xl items-center justify-between">
@@ -444,65 +448,19 @@ const App = () => {
             {!menuOpen && (
               <button
                 type="button"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-deep/70 md:hidden"
-                onClick={() => setMenuOpen((prev) => !prev)}
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-deep/80 text-fast-neon md:hidden"
+                onClick={() => setMenuOpen(true)}
                 aria-label="Open navigation"
               >
-                <div className="flex flex-col gap-1">
-                  <span className="h-0.5 w-5 bg-fast-neon" />
-                  <span className="h-0.5 w-5 bg-fast-neon" />
-                  <span className="h-0.5 w-5 bg-fast-neon" />
+                <div className="flex flex-col gap-1.5">
+                  <span className="h-0.5 w-6 bg-fast-neon" />
+                  <span className="h-0.5 w-6 bg-fast-neon" />
+                  <span className="h-0.5 w-6 bg-fast-neon" />
                 </div>
               </button>
             )}
           </div>
         </div>
-        <AnimatePresence>
-          {menuOpen ? (
-            <motion.div
-              className="fixed inset-0 z-[110] flex justify-end bg-black/80 backdrop-blur-md md:hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMenuOpen(false)}
-            >
-              <motion.div
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-                className="h-full w-[78%] border-l border-fast-neon/20 bg-fast-black/98 p-8 text-sm shadow-2xl relative z-[120]"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className="mb-12 flex items-center justify-between">
-                  <span className="font-heading text-xl tracking-[0.3em] text-fast-neon">MENU</span>
-                  <button 
-                    onClick={() => setMenuOpen(false)}
-                    className="h-10 w-10 flex items-center justify-center rounded-full border border-white/10 text-white"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="flex flex-col gap-5">
-                  {NAV_ITEMS.map((item) => (
-                    <a
-                      key={item.label}
-                      href={`#/${item.path}`}
-                      className={`transition ${
-                        route === item.path ? "text-white" : "text-fast-mist hover:text-white"
-                      }`}
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {item.label}
-                    </a>
-                  ))}
-                </div>
-              </motion.div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
       </header>
 
       <main className="relative z-10">
@@ -624,20 +582,44 @@ const App = () => {
                 description="FAST is the NVIDIA-backed AI society at SRMIST Kattankulathur, powering GPU-first learning, research, and systems innovation."
                 center
               />
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {aboutBubbles.map((card) => (
+              <div className="grid gap-8 md:grid-cols-2">
+                {aboutBubbles.map((card, idx) => (
                   <motion.div
                     key={card.title}
                     variants={fadeUp}
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="glass-card rounded-3xl p-6"
+                    transition={{ duration: 0.8, delay: idx * 0.1 }}
+                    className="glass-card group relative overflow-hidden rounded-[2.5rem] p-8 border border-fast-neon/10 hover:border-fast-neon/40 transition-all duration-700"
                   >
-                    <IconBadge label={card.icon} />
-                    <h3 className="mt-4 font-heading text-lg">{card.title}</h3>
-                    <p className="mt-2 text-sm text-fast-mist">{card.desc}</p>
+                    <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-fast-neon/5 blur-[80px] group-hover:bg-fast-neon/15 transition-all duration-1000" />
+                    
+                    <div className="relative flex flex-col md:flex-row items-center gap-10">
+                      <motion.div 
+                        whileHover={{ scale: 1.15, rotate: 8, zIndex: 10 }}
+                        className="h-40 w-40 flex-shrink-0 relative"
+                      >
+                        <div className="absolute inset-0 bg-fast-neon/30 blur-3xl rounded-full animate-pulse opacity-50" />
+                        <img 
+                          src={card.image} 
+                          alt={card.title} 
+                          className="relative z-10 h-full w-full object-contain filter drop-shadow-[0_0_20px_rgba(166,255,0,0.4)]" 
+                        />
+                      </motion.div>
+                      
+                      <div className="flex-1 text-center md:text-left">
+                        <span className="text-[0.65rem] uppercase tracking-[0.4em] text-fast-neon/60 font-bold mb-2 block">
+                          Phase {idx + 1}
+                        </span>
+                        <h3 className="font-heading text-2xl text-white group-hover:text-fast-neon transition-colors duration-300">
+                          {card.title}
+                        </h3>
+                        <p className="mt-4 text-fast-mist leading-relaxed italic text-sm md:text-base opacity-80 group-hover:opacity-100 transition-opacity">
+                          "{card.desc}"
+                        </p>
+                      </div>
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -1179,10 +1161,64 @@ const App = () => {
             </div>
           </div>
         </div>
-        <div className="mt-8 text-center text-xs text-fast-mist">
-          (c) 2026 F.A.S.T Club - SRM Institute of Science and Technology
-        </div>
       </footer>
+
+      <AnimatePresence>
+        {menuOpen ? (
+          <motion.div
+            className="fixed inset-0 z-[999999] flex justify-end bg-black/98 md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setMenuOpen(false)}
+          >
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="h-full w-[85%] border-l border-fast-neon/20 bg-[#050505] p-10 text-sm shadow-2xl relative z-[1000000]"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="mb-12 flex items-center justify-between">
+                <span className="font-heading text-3xl tracking-[0.5em] text-fast-neon">MENU</span>
+                <button 
+                  onClick={() => setMenuOpen(false)}
+                  className="h-12 w-12 flex items-center justify-center rounded-full border border-fast-neon/20 text-fast-neon bg-fast-neon/5 hover:bg-fast-neon hover:text-black transition-all"
+                >
+                  <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex flex-col gap-10">
+                {NAV_ITEMS.map((item, idx) => (
+                  <motion.a
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + idx * 0.08 }}
+                    key={item.label}
+                    href={`#/${item.path}`}
+                    className={`text-2xl font-heading tracking-[0.2em] transition-all hover:pl-4 ${
+                      route === item.path ? "text-fast-neon border-l-4 border-fast-neon pl-4" : "text-fast-mist hover:text-white"
+                    }`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {item.label}
+                  </motion.a>
+                ))}
+              </div>
+              
+              <div className="absolute bottom-16 left-0 right-0 flex flex-col items-center gap-4 text-center">
+                <div className="h-px w-32 bg-fast-neon/20" />
+                <p className="text-[0.6rem] uppercase tracking-[0.8em] text-fast-neon/30">
+                  ESTD 2024
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 };
