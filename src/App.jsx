@@ -409,7 +409,7 @@ const App = () => {
       <Preloader visible={loading} />
 
       <header
-        className={`fixed top-0 z-50 w-full transition-all duration-500 ${
+        className={`fixed top-0 z-[100] w-full transition-all duration-500 ${
           scrolled ? "bg-black/60 backdrop-blur-2xl border-b border-white/5 py-4" : "bg-transparent py-6"
         }`}
       >
@@ -460,7 +460,7 @@ const App = () => {
         <AnimatePresence>
           {menuOpen ? (
             <motion.div
-              className="fixed inset-0 z-40 flex justify-end bg-fast-black/70 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-[110] flex justify-end bg-black/80 backdrop-blur-md md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -471,7 +471,7 @@ const App = () => {
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ duration: 0.35, ease: "easeOut" }}
-                className="h-full w-[78%] border-l border-fast-neon/20 bg-fast-deep/95 p-8 text-sm shadow-deep"
+                className="h-full w-[78%] border-l border-fast-neon/20 bg-fast-black/98 p-8 text-sm shadow-2xl relative z-[120]"
                 onClick={(event) => event.stopPropagation()}
               >
                 <div className="mb-12 flex items-center justify-between">
