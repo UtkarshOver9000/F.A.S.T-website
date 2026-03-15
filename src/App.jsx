@@ -483,14 +483,14 @@ const App = () => {
               <span className="inline-flex items-center rounded-full border border-fast-neon/30 bg-fast-deep/80 px-4 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-fast-neon">
                 Powered by the NVIDIA Student Developer Ecosystem
               </span>
-              <div>
-                <h1 className="text-gradient text-shadow">
+              <div className="flex flex-col items-start gap-4">
+                <div className="relative">
                   <img
                     src={heroPoster}
                     alt="FAST Poster"
                     className="h-28 w-auto md:h-32 logo-glow logo-screen-blend"
                   />
-                </h1>
+                </div>
                 <p className="mt-2 text-xl font-heading text-fast-neon">Futuristic AI Society of Tech</p>
                 <p className="mt-2 text-sm uppercase tracking-[0.35em] text-fast-neon">
                   Compute. Train. Accelerate.

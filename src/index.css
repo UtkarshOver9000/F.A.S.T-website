@@ -224,8 +224,9 @@
 }
 
 .logo-screen-blend {
-  mix-blend-mode: screen;
-  filter: contrast(1.1) brightness(1.2);
+  mix-blend-mode: lighten;
+  filter: contrast(1.8) brightness(1.1);
+  isolation: isolate;
 }
 
 @keyframes logoPulse {
