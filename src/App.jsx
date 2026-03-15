@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { ConstellationBackground } from "./components/ui/ConstellationBackground";
 
-const fastLogo = "/assets/fast-logo.png";
+const fastLogo = "/assets/fast-logo-icon.png";
 const nvidiaLogo = "/assets/nvidia-logo.png";
 const srmistLogo = "/assets/srmist-logo.png";
 
@@ -419,7 +419,7 @@ const App = () => {
       >
         <div className="mx-auto flex w-[92%] max-w-7xl items-center justify-between">
           <a href="#/home" className="flex items-center gap-3 group">
-            <span className="tech-logo">F.A.S.T</span>
+            <img src={fastLogo} alt="FAST" className="h-10 w-auto logo-glow transition-transform group-hover:scale-110" />
           </a>
           <nav className="hidden items-center gap-6 lg:gap-8 text-[0.62rem] font-bold uppercase tracking-[0.2em] md:flex">
             {NAV_ITEMS.map((item) => (
