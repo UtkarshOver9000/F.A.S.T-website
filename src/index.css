@@ -223,12 +223,6 @@
   animation: logoPulse 2s ease-in-out infinite;
 }
 
-.logo-screen-blend {
-  mix-blend-mode: lighten;
-  filter: contrast(1.8) brightness(1.1);
-  isolation: isolate;
-}
-
 @keyframes logoPulse {
   0%, 100% { filter: drop-shadow(0 0 10px rgba(166, 255, 0, 0.4)); }
   50% { filter: drop-shadow(0 0 25px rgba(166, 255, 0, 0.7)); }
