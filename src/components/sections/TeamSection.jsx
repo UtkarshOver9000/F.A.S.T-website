@@ -4,16 +4,14 @@ import { Github, Linkedin, Twitter, Instagram } from 'lucide-react';
 
 export const TeamSection = () => {
   const team = [
-    { name: "Adwaith P V", role: "Co-Founder", socials: ["github", "linkedin", "twitter"] },
-    { name: "Rohan Ganesh", role: "Co-Founder", socials: ["github", "linkedin", "instagram"] },
-    { name: "Vasist Acharya", role: "Technical Head", socials: ["github", "linkedin", "twitter"] },
-    { name: "Aron Jolly", role: "Sponsor Manager", socials: ["github", "linkedin"] },
-    { name: "Anushka Gupta", role: "Creatives Head", socials: ["github", "linkedin", "twitter"] },
-    { name: "Aditya Chebrolu", role: "People Management Head", socials: ["github", "linkedin", "instagram"] },
-    { name: "Skandesh", role: "-", socials: ["github", "linkedin", "instagram"] },
+    { name: "Adwaith P V", role: "President", image: "/assets/adwaith.jpg.jpeg", socials: ["github", "linkedin", "twitter"] },
+    { name: "Rohan Ganesh", role: "President", image: "/assets/rohan ganesh.jpg.jpeg", socials: ["github", "linkedin", "instagram"] },
+    { name: "Vasist Acharya", role: "Technical Head", image: "/assets/vasist.jpg.jpeg", socials: ["github", "linkedin", "twitter"] },
+    { name: "Tanmay Singh", role: "Vice President", image: "/assets/tanmay.jpg", socials: ["github", "linkedin"] },
+    { name: "Anushka Gupta", role: "Vision Head", image: "/assets/anushka.jpg.jpeg", socials: ["github", "linkedin", "twitter"] },
+    { name: "Aditya Chebrolu", role: "Corporate Head", image: "/assets/Aditya.jpg", socials: ["github", "linkedin", "instagram"] },
+    { name: "Skandesh", role: "Treasurer", image: "/assets/skandesh.jpeg", socials: ["github", "linkedin", "instagram"] },
     { name: "Amiya", role: "-", socials: ["github", "linkedin", "instagram"] },
-    { name: "Anushka Gupta", role: "Team Lead", socials: ["github", "linkedin"] },
-    { name: "Tanmay Singh", role: "Treasurer", socials: ["github", "linkedin"] },
     { name: "Dhriti Gupta", role: "-", socials: ["github", "linkedin", "twitter"] },
     { name: "Siddhant", role: "-", socials: ["github", "linkedin", "instagram"] }
   ];
@@ -49,7 +47,13 @@ export const TeamSection = () => {
           >
             {/* Vercel-style glowing hollow avatar ring */}
             <div className="w-36 h-36 rounded-full mb-6 border-2 border-[#a6ff00]/40 shadow-[0_0_30px_rgba(166,255,0,0.15)] relative overflow-hidden bg-transparent">
-              {/* Optional: if you have images, place <img src={member.image} /> here */}
+              {member.image ? (
+                <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center font-bold text-2xl text-[#a6ff00]/40">
+                  {member.name.charAt(0)}
+                </div>
+              )}
             </div>
             
             <h3 className="text-xl font-bold text-[#e8ff3a] mb-1">{member.name}</h3>

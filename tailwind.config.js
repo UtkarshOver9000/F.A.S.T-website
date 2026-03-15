@@ -20,8 +20,8 @@ export default {
         },
       },
       fontFamily: {
-        heading: ["Cinzel", "Sora", "sans-serif"],
-        body: ["Manrope", "sans-serif"],
+        heading: ["Outfit", "Sora", "sans-serif"],
+        body: ["Outfit", "sans-serif"],
       },
       boxShadow: {
         glow: "0 0 24px rgba(0, 255, 166, 0.4)",

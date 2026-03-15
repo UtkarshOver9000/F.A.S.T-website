@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+import { ConstellationBackground } from "./components/ui/ConstellationBackground";
 
 const fastLogo = "/assets/fast-logo.png";
 const nvidiaLogo = "/assets/nvidia-logo.png";
@@ -55,7 +56,7 @@ const SectionHeading = ({ eyebrow, title, description, center }) => (
 );
 
 const IconBadge = ({ label }) => (
-  <div className="h-11 w-11 rounded-2xl border border-fast-cyan/40 bg-fast-black/40 flex items-center justify-center text-[0.6rem] font-heading text-fast-cyan">
+  <div className="h-12 w-12 rounded-2xl border border-fast-cyan/40 bg-fast-black/40 flex items-center justify-center text-[0.7rem] font-heading text-fast-cyan flex-shrink-0">
     {label}
   </div>
 );
@@ -160,54 +161,63 @@ const App = () => {
     []
   );
 
-  const aboutCards = [
+  const aboutBubbles = [
     {
-      title: "What is FAST",
-      desc: "F.A.S.T is SRMIST’s NVIDIA-backed AI society focused on GPU computing, research, and community-led innovation.",
-      icon: "FAST",
+      title: "What is FAST?",
+      desc: "F.A.S.T. (Futuristic AI Society for Technology) is a student-led club at SRMIST that brings together curious minds to explore, build, and innovate with Artificial Intelligence.",
+      icon: "AI",
     },
     {
-      title: "In it for you",
-      desc: "Hands-on mentorship, access to GPU labs, and collaborative projects that build real-world skills.",
-      icon: "YOU",
+      title: "Our NVIDIA Partnership",
+      desc: "As part of the NVIDIA Student Network, our members gain exclusive access to NVIDIA's Deep Learning Institute courses, expert workshops, and global networking opportunities.",
+      icon: "NV",
     },
     {
-      title: "Join our research team",
-      desc: "Get involved in publications, open-source tooling, and cutting-edge AI systems research.",
-      icon: "R&D",
+      title: "Join Our Research Team",
+      desc: "Join a vibrant community of researchers, creators, and problem-solvers. Here, you'll benefit from direct collaboration with renowned faculty and build a professional network of industry experts and talented peers who will challenge and support you.",
+      icon: "RS",
     },
     {
-      title: "Our NVIDIA partnership",
-      desc: "Official student developer ecosystem partner — access to resources, certifications, and industry mentorship.",
-      icon: "NVIDIA",
-    },
-    {
-      title: "Our Domains",
-      desc: "Technical, Corporate, and Creatives — three pillars powering FAST’s mission.",
-      icon: "DOM",
+      title: "What's in it for you?",
+      desc: "We host weekly ideathons, engaging activities, and interactive productivity events. At F.A.S.T., every session is designed to spark innovation while keeping the experience fun and collaborative.",
+      icon: "FY",
     },
   ];
 
   const domainGroups = [
     {
       title: "Technical",
-      desc: "Hands-on system builds, AI models, and GPU-powered research projects.",
-      imageLabel: "TECH",
-      subdomains: ["AI", "Machine Learning", "DSBS"],
+      desc: "The tech backbone of our club - where innovation meets execution. From coding and development to hands-on projects, this team brings ideas to life with real-world impact.",
+      imageLabel: "Tech",
+      subdomains: ["AI", "ML", "DSBS"],
     },
     {
       title: "Corporate",
-      desc: "Partnerships, community growth, and professional development for FAST members.",
-      imageLabel: "CORP",
+      desc: "The bridge between our club and the outside world. Managing partnerships, sponsorships, and outreach while also driving workshops, hackathons, and events, this team ensures our presence is felt both on and off campus.",
+      imageLabel: "Corp",
     },
     {
       title: "Creatives",
-      desc: "Design, branding, and storytelling that amplify our vision across campus.",
-      imageLabel: "CRTV",
+      desc: "The storytellers and designers of the club. Through visuals, content, and unique ideas, this team adds the spark that makes everything we do engaging and unforgettable.",
+      imageLabel: "Crtv",
     },
   ];
 
   const events = [
+    {
+      type: "Workshop",
+      tag: "Workshop",
+      title: "Building RAG Agents with LLM's",
+      meta: "Peter Drucker Hall, MBA Block",
+      date: "Feb 28, 2026",
+      desc: "Certification workshop led by NVIDIA Deep Learning Institute (DLI) on building Retrieval-Augmented Generation agents.",
+      status: "Past Event",
+      icon: "CAL",
+      image: "DLI Workshop",
+      poster: "/assets/dliworkshopposter.jpeg",
+      details: ["Lead Instructor: Dr. Janaki Meena", "Guest Speaker: Mr. Sruthik P (NVIDIA)", "NVIDIA DLI Certification"],
+      learnMore: "/assets/dliworkshopposter.jpeg",
+    },
     {
       type: "Hackathon",
       tag: "Hackathon",
@@ -228,18 +238,6 @@ const App = () => {
       learnMore: "/assets/fastathon-poster.png",
     },
     {
-      type: "Workshop",
-      tag: "Workshop",
-      title: "NVIDIA DLI Workshop",
-      meta: "SRMIST Kattankulathur",
-      date: "Coming Soon",
-      desc: "Official NVIDIA Deep Learning Institute hands-on workshop with certified training.",
-      status: "Coming Soon",
-      icon: "CAL",
-      image: "Workshop Visual",
-      learnMore: "#/contact",
-    },
-    {
       type: "Bootcamp",
       tag: "Bootcamp",
       title: "AI Bootcamp",
@@ -257,12 +255,22 @@ const App = () => {
     {
       title: "Technical Gallery",
       description: "Labs, workshops, and hackathon builds.",
-      slots: 4,
+      images: [
+        "/assets/technical1.jpeg",
+        "/assets/technical2 (1).jpeg",
+        "/assets/technical2 (3).jpeg",
+        "/assets/technical4).jpeg",
+      ],
     },
     {
       title: "Social Gallery",
       description: "Community moments and creative drops.",
-      slots: 4,
+      images: [
+        "/assets/social1.jpeg",
+        "/assets/social2.jpeg",
+        "/assets/social3.jpeg",
+        "/assets/social4.jpeg",
+      ],
     },
   ];
 
@@ -340,50 +348,55 @@ const App = () => {
           name: "Adwaith P V",
           role: "President",
           initials: "AV",
-          image: "adwaith-pv.jpg",
+          image: "/assets/adwaith.jpg.jpeg",
           linkedin: "https://www.linkedin.com/in/adwaithpv/",
         },
         {
           name: "Rohan Ganesh",
           role: "President",
           initials: "RG",
-          image: "rohan-ganesh.jpg",
+          image: "/assets/rohan ganesh.jpg.jpeg",
           linkedin: "https://www.linkedin.com/in/rohan-ganesh2306/",
+        },
+      ],
+    },
+    {
+      title: "Leadership Team",
+      members: [
+        {
+          name: "Vasist Acharya",
+          role: "Technical Head",
+          initials: "VA",
+          image: "/assets/vasist.jpg.jpeg",
+          linkedin: "https://www.linkedin.com/in/vasistacharya/",
         },
         {
           name: "Tanmay Singh",
           role: "Vice President",
           initials: "TS",
-          image: "tanmay-singh.jpg",
-          linkedin: "",
-        },
-        {
-          name: "Vasist Acharya",
-          role: "Technical Head",
-          initials: "VA",
-          image: "vasist-acharya.jpg",
-          linkedin: "https://www.linkedin.com/in/vasistacharya/",
-        },
-        {
-          name: "Aditya Cherabolu",
-          role: "Corporate Head",
-          initials: "AC",
-          image: "aditya-chebrolu.jpg",
-          linkedin: "https://www.linkedin.com/in/aditya-chebrolu-5a0321277/",
+          image: "/assets/tanmay.jpg",
+          linkedin: "https://www.linkedin.com/company/fastsrm",
         },
         {
           name: "Anushka Gupta",
           role: "Vision Head",
           initials: "AG",
-          image: "anushka-gupta.jpg",
+          image: "/assets/anushka.jpg.jpeg",
           linkedin: "https://www.linkedin.com/in/anushka-gupta04/",
         },
         {
-          name: "Skandesh Maadhav",
+          name: "Aditya Cherabolu",
+          role: "Corporate Head",
+          initials: "AC",
+          image: "/assets/Aditya.jpg",
+          linkedin: "https://www.linkedin.com/in/aditya-chebrolu-5a0321277/",
+        },
+        {
+          name: "Skandesh",
           role: "Treasurer",
-          initials: "SM",
-          image: "skandesh-maadhav.jpg",
-          linkedin: "",
+          initials: "S",
+          image: "/assets/skandesh.jpeg",
+          linkedin: "https://www.linkedin.com/company/fastsrm",
         },
       ],
     },
@@ -396,38 +409,37 @@ const App = () => {
       <Preloader visible={loading} />
 
       <header
-        className={`fixed top-0 z-30 w-full border-b transition-all ${
-          scrolled ? "border-fast-neon/20 bg-fast-deep/80 backdrop-blur-xl" : "border-transparent bg-fast-black/30"
+        className={`fixed top-0 z-50 w-full transition-all duration-500 ${
+          scrolled ? "bg-black/60 backdrop-blur-2xl border-b border-white/5 py-4" : "bg-transparent py-6"
         }`}
       >
-        <div className="mx-auto flex w-[92%] max-w-6xl items-center justify-between py-4">
-          <a href="#/home" className="flex items-center gap-3">
-            <span className="font-heading text-xl tracking-[0.35em] text-fast-neon">F.A.S.T</span>
+        <div className="mx-auto flex w-[92%] max-w-7xl items-center justify-between">
+          <a href="#/home" className="flex items-center gap-3 group">
+            <span className="font-heading text-2xl font-black tracking-tighter text-white group-hover:text-[#a6ff00] transition-colors">F.A.S.T</span>
           </a>
-          <nav className="hidden items-center gap-6 text-sm md:flex">
+          <nav className="hidden items-center gap-6 lg:gap-8 text-[0.62rem] font-bold uppercase tracking-[0.2em] md:flex">
             {NAV_ITEMS.map((item) => (
               <a
                 key={item.label}
                 href={`#/${item.path}`}
-                className={`transition ${
-                  route === item.path ? "text-white" : "text-fast-mist hover:text-white"
+                className={`transition-colors duration-300 ${
+                  route === item.path ? "text-[#a6ff00]" : "text-gray-400 hover:text-white"
                 }`}
               >
                 {item.label}
               </a>
             ))}
           </nav>
-          <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-2 rounded-full border border-fast-nvidia/40 bg-fast-black/40 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-fast-nvidia md:flex">
-              <img src={nvidiaLogo} alt="NVIDIA" className="h-7 w-auto" />
+          <div className="flex items-center gap-4">
+            <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-[#a6ff00] md:flex">
+              <img src={nvidiaLogo} alt="NVIDIA" className="h-6 w-auto" />
               NVIDIA Partner
             </div>
             <a
               href="#/contact"
-              className="hidden rounded-full bg-gradient-to-r from-fast-nvidia to-fast-neon px-5 py-2 text-sm font-semibold text-fast-black shadow-glow transition hover:-translate-y-0.5 md:inline-flex ripple-btn"
-              onClick={handleRipple}
+              className="hidden rounded-full bg-white text-black px-6 py-2.5 text-[0.65rem] font-black uppercase tracking-[0.2em] transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.15)] md:inline-flex"
             >
-              JOIN FAST
+              Join FAST
             </a>
             <button
               type="button"
@@ -485,10 +497,11 @@ const App = () => {
 
       <main className="relative z-10">
         {route === "home" && (
-        <section id="home" className="section-wrap grid-bg pt-32">
-          <div className="absolute inset-0 bg-gradient-to-b from-fast-black/40 via-fast-black/70 to-fast-black/95" />
-          <div className="absolute -right-24 top-24 h-72 w-72 rounded-full spiral-bg opacity-45" />
-          <div className="absolute -left-20 bottom-16 h-56 w-56 rounded-full spiral-bg opacity-30" />
+        <section id="home" className="section-wrap min-h-screen grid-bg flex items-center justify-center pt-24 pb-12 overflow-hidden bg-[#050505]">
+          <ConstellationBackground />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/40 via-[#050505]/70 to-[#050505]/95 pointer-events-none" />
+          <div className="absolute -right-24 top-24 h-72 w-72 rounded-full spiral-bg opacity-45 pointer-events-none" />
+          <div className="absolute -left-20 bottom-16 h-56 w-56 rounded-full spiral-bg opacity-30 pointer-events-none" />
           <ChipRain />
           <div className="relative mx-auto grid w-[92%] max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <motion.div
@@ -593,33 +606,33 @@ const App = () => {
         )}
 
         {route === "about" && (
-        <section id="about" className="section-wrap">
-          <div className="mx-auto w-[92%] max-w-6xl">
-            <SectionHeading
-              eyebrow="Who We Are"
-              title="About Us"
-              description="FAST is the NVIDIA-backed AI society at SRMIST Kattankulathur, powering GPU-first learning, research, and systems innovation."
-              center
-            />
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {aboutCards.map((card) => (
-                <motion.div
-                  key={card.title}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  className="glass-card rounded-3xl p-6"
-                >
-                  <IconBadge label={card.icon} />
-                  <h3 className="mt-4 font-heading text-lg">{card.title}</h3>
-                  <p className="mt-2 text-sm text-fast-mist">{card.desc}</p>
-                </motion.div>
-              ))}
+          <section id="about" className="section-wrap">
+            <div className="mx-auto w-[92%] max-w-6xl">
+              <SectionHeading
+                eyebrow="Who We Are"
+                title="About Us"
+                description="FAST is the NVIDIA-backed AI society at SRMIST Kattankulathur, powering GPU-first learning, research, and systems innovation."
+                center
+              />
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {aboutBubbles.map((card) => (
+                  <motion.div
+                    key={card.title}
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="glass-card rounded-3xl p-6"
+                  >
+                    <IconBadge label={card.icon} />
+                    <h3 className="mt-4 font-heading text-lg">{card.title}</h3>
+                    <p className="mt-2 text-sm text-fast-mist">{card.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
         )}
 
         {route === "domains" && (
@@ -806,20 +819,18 @@ const App = () => {
                 >
                   <h3 className="font-heading text-lg text-fast-neon">{section.title}</h3>
                   <p className="mt-2 text-sm text-fast-mist">{section.description}</p>
-                  <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    {(section.images || []).map((src, index) => (
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                    {section.images.map((img, index) => (
                       <div
                         key={`${section.title}-${index}`}
-                        className="relative h-40 overflow-hidden rounded-2xl border border-fast-neon/20 bg-fast-black/40"
+                        className="group relative h-40 overflow-hidden rounded-2xl border border-fast-neon/20 bg-fast-black/40"
                       >
                         <img
-                          src={src}
+                          src={img}
                           alt={`${section.title} ${index + 1}`}
-                          className="h-full w-full object-cover"
-                          onError={(event) => {
-                            event.currentTarget.style.display = "none";
-                          }}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-fast-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                       </div>
                     ))}
                     {(!section.images || section.images.length === 0) &&
@@ -895,16 +906,18 @@ const App = () => {
                   className="glass-card rounded-3xl p-6"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-full border border-fast-neon/40 bg-fast-black/40 text-base font-heading text-fast-neon relative overflow-hidden">
-                      <img
-                        src={`/assets/team/${member.image}`}
-                        alt={member.name}
-                        className="absolute inset-0 h-full w-full object-cover"
-                        onError={() => setImageError((prev) => ({ ...prev, [member.name]: true }))}
-                      />
-                      {(imageError[member.name] || !member.image) && (
-                        <span className="relative z-10">{member.initials}</span>
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-fast-neon/40 bg-fast-black/40 text-sm font-heading text-fast-neon relative overflow-hidden">
+                      {member.image && (
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="absolute inset-0 h-full w-full object-cover z-20"
+                          onError={(event) => {
+                            event.currentTarget.style.display = "none";
+                          }}
+                        />
                       )}
+                      <span className="relative z-10">{member.initials}</span>
                     </div>
                     <div>
                       <h4 className="font-heading text-base text-white">{member.name}</h4>
@@ -927,7 +940,7 @@ const App = () => {
                     </a>
                   </div>
                   <div className="mt-4 rounded-full border border-fast-neon/20 bg-fast-black/40 px-4 py-2 font-mono text-xs text-fast-neon">
-                    $ ./view-profile {member.name.toLowerCase().replace(/\\s+/g, "-")}
+                    $ ./view-profile {member.name.toLowerCase().replace(/\s+/g, "-")}
                   </div>
                 </motion.div>
               ))}
@@ -945,15 +958,22 @@ const App = () => {
               description="Crafted with a futuristic product mindset and NVIDIA-inspired visual direction."
               center
             />
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[
                 {
                   name: "Utkarsh Sharma",
+                  image: "/assets/utkarsh.jpeg",
                   linkedin: "https://www.linkedin.com/in/utkarsh-sharma-lm10/",
                 },
                 {
                   name: "Swetank Kumar",
+                  image: "/assets/swetank.jpg",
                   linkedin: "https://www.linkedin.com/in/swetank-kumar-706557249/",
+                },
+                {
+                  name: "Shashwat Chaturvedi",
+                  image: null,
+                  linkedin: "#",
                 },
               ].map((builder) => (
                 <motion.div
@@ -965,18 +985,22 @@ const App = () => {
                   transition={{ duration: 0.6, ease: "easeOut" }}
                   className="glass-card rounded-3xl p-6 text-center"
                 >
-                  <div className="mx-auto mb-4 h-14 w-14 rounded-2xl border border-fast-neon/40 bg-fast-emerald/50 text-fast-neon flex items-center justify-center font-heading text-lg">
-                    {builder.name
-                      .split(" ")
-                      .map((part) => part[0])
-                      .join("")}
+                  <div className="mx-auto mb-4 h-20 w-20 rounded-2xl border border-fast-neon/40 bg-fast-emerald/50 text-fast-neon flex items-center justify-center font-heading text-xl overflow-hidden relative">
+                    {builder.image ? (
+                      <img src={builder.image} alt={builder.name} className="w-full h-full object-cover" />
+                    ) : (
+                      builder.name
+                        .split(" ")
+                        .map((part) => part[0])
+                        .join("")
+                    )}
                   </div>
                   <h3 className="font-heading text-lg">{builder.name}</h3>
                   <a
                     href={builder.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center justify-center rounded-full border border-fast-neon/30 bg-fast-deep/70 px-4 py-2 text-[0.7rem] uppercase tracking-[0.2em] text-fast-mist"
+                    className="mt-4 inline-flex items-center justify-center rounded-full border border-fast-neon/30 bg-fast-deep/70 px-4 py-2 text-[0.7rem] uppercase tracking-[0.2em] text-fast-mist hover:text-white transition-colors"
                   >
                     LinkedIn
                   </a>
@@ -1140,9 +1164,3 @@ const App = () => {
 };
 
 export default App;
-
-
-
-
-
-

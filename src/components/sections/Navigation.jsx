@@ -25,9 +25,8 @@ export const Navigation = () => {
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-[#050505]/80 backdrop-blur-md border-b border-white/10 py-4' : 'bg-transparent py-6'}`}>
       <div className="max-w-[1400px] mx-auto px-6 flex justify-between items-center">
         <a href="#" className="flex items-center gap-3 group">
-          <img src="/logo.png" alt="FAST" className="w-10 h-10 object-contain" 
-               onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='block'; }}/>
-          <span style={{display: 'none'}} className="font-heading font-black text-2xl tracking-tighter text-white group-hover:text-[#76B900] transition-colors">
+          <img src="/assets/fast-logo.png" alt="FAST" className="w-10 h-10 object-contain transition-transform group-hover:scale-110" />
+          <span className="font-heading font-black text-2xl tracking-tighter text-white group-hover:text-[#a6ff00] transition-colors">
             F.A.S.T
           </span>
         </a>
@@ -35,11 +34,11 @@ export const Navigation = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {links.map((link) => (
-            <a key={link.name} href={link.href} className="text-sm font-semibold text-gray-300 hover:text-[#76B900] transition-colors">
+            <a key={link.name} href={link.href} className="text-sm font-bold tracking-widest uppercase text-gray-400 hover:text-[#a6ff00] transition-colors">
               {link.name}
             </a>
           ))}
-          <a href="#join" className="px-5 py-2 rounded bg-[#76B900] text-black font-bold text-sm hover:bg-[#88d400] transition-colors">
+          <a href="#join" className="px-6 py-2.5 rounded-full bg-[#a6ff00] text-black font-black text-xs tracking-widest uppercase hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(166,255,0,0.3)]">
             Join Platform
           </a>
         </div>

@@ -5,11 +5,11 @@ import { Calendar, MapPin } from 'lucide-react';
 export const EventsSection = () => {
   const events = [
     {
-      title: "RAG Agents Workshop",
-      date: "Feb 28, 2025",
-      location: "SRMIST Tech Park",
-      description: "Our premier workshop on building Retrieval-Augmented Generation agents using Large Language Models, led by NVIDIA DLI.",
-      status: "Recent",
+      title: "Building RAG Agents with LLM's",
+      date: "Feb 28, 2026",
+      location: "Peter Drucker Hall, MBA Block",
+      description: "Official NVIDIA Deep Learning Institute (DLI) certification workshop on building Retrieval-Augmented Generation agents.",
+      status: "Ended",
     },
     {
       title: "FAST x Founder Club Barter",

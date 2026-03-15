@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Manrope:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;600;700&family=Manrope:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -10,182 +10,41 @@
   }
 
   body {
-    @apply bg-fast-black text-white font-body antialiased;
+    @apply bg-[#050505] text-white font-body antialiased selection:bg-[#a6ff00] selection:text-black;
     background-image:
-      radial-gradient(circle at 20% 20%, rgba(39, 211, 255, 0.08), transparent 45%),
-      radial-gradient(circle at 80% 0%, rgba(118, 185, 0, 0.16), transparent 40%),
-      radial-gradient(circle at 50% 80%, rgba(11, 61, 46, 0.45), transparent 45%);
+      radial-gradient(circle at 10% 10%, rgba(166, 255, 0, 0.05), transparent 40%),
+      radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.03), transparent 30%),
+      radial-gradient(circle at 50% 50%, rgba(10, 10, 10, 1), #050505);
     min-height: 100vh;
   }
 }
 
 @layer components {
+  /* Layout & Cards */
+  .section-wrap {
+    @apply relative z-10 py-32;
+  }
+
   .glass-card {
-    @apply bg-fast-slate/80 border border-fast-neon/20 shadow-deep backdrop-blur-xl;
+    @apply bg-white/5 border border-white/10 shadow-2xl backdrop-blur-2xl transition-all duration-500;
     position: relative;
     overflow: hidden;
-    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
-  }
-
-  .glass-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(34, 255, 136, 0.18), transparent 55%);
-    opacity: 0;
-    transition: opacity 0.35s ease;
-    pointer-events: none;
-  }
-
-  .glass-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border: 1px solid rgba(34, 255, 136, 0.12);
-    opacity: 0;
-    transition: opacity 0.35s ease;
-    pointer-events: none;
   }
 
   .glass-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(34, 255, 136, 0.45);
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
-  }
-
-  .glass-card:hover::before,
-  .glass-card:hover::after {
-    opacity: 1;
-  }
-
-  .neon-border {
-    @apply border border-fast-neon/30;
-  }
-
-  .neon-text {
-    @apply text-fast-neon;
-  }
-
-  .section-wrap {
-    @apply relative z-10 py-24;
-  }
-
-  .section-wrap::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top, rgba(34, 255, 136, 0.08), transparent 65%);
-    opacity: 0.7;
-    pointer-events: none;
-  }
-
-  .section-wrap::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: min(70%, 680px);
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(34, 255, 136, 0.6), transparent);
-    transform: translateX(-50%);
-    opacity: 0.6;
-    pointer-events: none;
-  }
-
-  .section-wrap > * {
-    position: relative;
-    z-index: 1;
+    @apply -translate-y-2 scale-[1.02] bg-white/10;
+    border-color: rgba(166, 255, 0, 0.4);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(166, 255, 0, 0.1);
   }
 
   .grid-bg {
     background-image:
-      linear-gradient(rgba(34, 255, 136, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(34, 255, 136, 0.08) 1px, transparent 1px);
-    background-size: 70px 70px;
+      linear-gradient(rgba(166, 255, 0, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(166, 255, 0, 0.05) 1px, transparent 1px);
+    background-size: 80px 80px;
   }
 
-  .angled-card {
-    clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%, 4% 50%);
-  }
-
-  .hero-slab {
-    background: linear-gradient(135deg, rgba(15, 30, 26, 0.95), rgba(8, 15, 24, 0.95));
-    border: 1px solid rgba(34, 255, 136, 0.2);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
-  }
-
-  .domain-card {
-    min-height: 220px;
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
-  }
-
-  .domain-pattern {
-    background-image:
-      radial-gradient(circle at 15% 20%, rgba(34, 255, 136, 0.25), transparent 45%),
-      radial-gradient(circle at 80% 70%, rgba(34, 255, 136, 0.18), transparent 42%),
-      repeating-linear-gradient(
-        135deg,
-        rgba(34, 255, 136, 0.08) 0,
-        rgba(34, 255, 136, 0.08) 2px,
-        transparent 2px,
-        transparent 18px
-      );
-  }
-
-  .domain-image {
-    position: relative;
-    height: 64px;
-    width: 64px;
-    border-radius: 9999px;
-    border: 2px solid rgba(34, 255, 136, 0.35);
-    background: linear-gradient(135deg, rgba(34, 255, 136, 0.28), rgba(12, 20, 24, 0.9));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #c8ffe0;
-    overflow: hidden;
-  }
-
-  .domain-orb {
-    position: absolute;
-    height: 72px;
-    width: 72px;
-    border-radius: 9999px;
-    border: 1px solid rgba(34, 255, 136, 0.3);
-    background: radial-gradient(circle, rgba(34, 255, 136, 0.2), rgba(10, 10, 10, 0.5));
-    filter: blur(0.2px);
-    animation: orbFloat 8s ease-in-out infinite;
-  }
-
-  @keyframes orbFloat {
-    0% {
-      transform: translateY(0);
-      opacity: 0.7;
-    }
-    50% {
-      transform: translateY(-10px);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 0.7;
-    }
-  }
-
-  .spiral-bg {
-    background: conic-gradient(
-      from 120deg,
-      rgba(34, 255, 136, 0.35),
-      rgba(34, 255, 136, 0.05),
-      transparent 70%
-    );
-    filter: blur(0.2px);
-    mask: radial-gradient(circle, transparent 35%, black 36%);
-  }
-
+  /* Components used in App.jsx */
   .chip-rain {
     position: absolute;
     inset: 0;
@@ -197,102 +56,97 @@
   .chip {
     position: absolute;
     top: -12%;
-    border: 1px solid rgba(34, 255, 136, 0.35);
-    background: linear-gradient(135deg, rgba(12, 20, 24, 0.9), rgba(11, 61, 46, 0.9));
-    box-shadow: 0 0 18px rgba(34, 255, 136, 0.25);
+    border: 1px solid rgba(166, 255, 0, 0.3);
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(5, 5, 5, 0.9));
+    box-shadow: 0 0 15px rgba(166, 255, 0, 0.2);
     animation: chipFall linear infinite;
   }
 
-  .chip::before {
-    content: "";
-    position: absolute;
-    inset: 4px;
-    border: 1px solid rgba(34, 255, 136, 0.2);
-  }
-
-  .chip::after {
-    content: "";
-    position: absolute;
-    inset: 2px;
-    background: linear-gradient(90deg, rgba(34, 255, 136, 0.12), transparent 60%);
-    opacity: 0.7;
-  }
-
   @keyframes chipFall {
-    0% {
-      transform: translateY(-10vh) rotate(8deg);
-      opacity: 0.2;
-    }
-    40% {
-      opacity: 0.8;
-    }
-    100% {
-      transform: translateY(120vh) rotate(16deg);
-      opacity: 0.1;
-    }
+    0% { transform: translateY(-10vh) rotate(8deg); opacity: 0.2; }
+    40% { opacity: 0.8; }
+    100% { transform: translateY(120vh) rotate(16deg); opacity: 0.1; }
   }
 
-  .logo-glow {
-    filter: drop-shadow(0 0 18px rgba(0, 255, 166, 0.6));
+  .spiral-bg {
+    background: conic-gradient(from 120deg, rgba(166, 255, 0, 0.2), rgba(166, 255, 0, 0.05), transparent 70%);
+    filter: blur(40px);
+    mask: radial-gradient(circle, transparent 35%, black 36%);
   }
 
-  .logo-glow-hover {
-    transition: filter 0.3s ease, transform 0.3s ease;
+  .hero-slab {
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(5, 5, 5, 0.95));
+    border: 1px solid rgba(166, 255, 0, 0.2);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
   }
 
-  .logo-glow-hover:hover {
-    filter: drop-shadow(0 0 28px rgba(0, 255, 166, 0.85));
-    transform: scale(1.02);
+  .angled-card {
+    clip-path: polygon(0 0, 95% 0, 100% 50%, 95% 100%, 0 100%, 5% 50%);
   }
 
-  .hero-ring {
-    @apply absolute rounded-full border border-fast-neon/30;
-    inset: 0;
-    margin: auto;
+  .domain-pattern {
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(166, 255, 0, 0.1), transparent 45%),
+      repeating-linear-gradient(135deg, rgba(166, 255, 0, 0.05) 0, rgba(166, 255, 0, 0.05) 2px, transparent 2px, transparent 18px);
   }
 
-  .nvidia-orbit {
-    position: absolute;
-    inset: 0;
-    animation: spinSlow 18s linear infinite;
-    z-index: 20;
-  }
-
-  .nvidia-orbit-2 {
-    inset: 12%;
-    animation-direction: reverse;
-    animation-duration: 14s;
-  }
-
-  .nvidia-badge {
-    position: absolute;
-    top: -18px;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 76px;
-    width: 76px;
+  .domain-image {
+    position: relative;
+    height: 80px;
+    width: 80px;
     border-radius: 9999px;
-    background: rgba(13, 23, 38, 0.9);
-    border: 1px solid rgba(118, 185, 0, 0.6);
+    border: 2px solid rgba(166, 255, 0, 0.45);
+    background: linear-gradient(135deg, rgba(166, 255, 0, 0.2), rgba(12, 20, 24, 0.95));
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 24px rgba(118, 185, 0, 0.35);
-  }
-
-  .ripple-btn {
-    position: relative;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #ffffff;
     overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 0 25px rgba(166, 255, 0, 0.3);
   }
-}
 
-@layer utilities {
+  .domain-orb {
+    position: absolute;
+    height: 80px;
+    width: 80px;
+    border-radius: 9999px;
+    border: 1px solid rgba(166, 255, 0, 0.3);
+    background: radial-gradient(circle, rgba(166, 255, 0, 0.2), transparent);
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(-15px); opacity: 0.8; }
+  }
+
+  /* Utilities */
+  .logo-glow {
+    filter: drop-shadow(0 0 15px rgba(166, 255, 0, 0.5));
+  }
+
+  .ripple-circle {
+    position: absolute;
+    border-radius: 9999px;
+    transform: scale(0);
+    background: rgba(166, 255, 0, 0.4);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+  }
+
+  @keyframes ripple {
+    to { transform: scale(4); opacity: 0; }
+  }
+
   .text-shadow {
-    text-shadow: 0 0 24px rgba(0, 255, 166, 0.5);
+    text-shadow: 0 0 30px rgba(166, 255, 0, 0.4);
   }
 
   .text-gradient {
-    background: linear-gradient(120deg, #ffffff, #22ff88 60%, #00ffa6);
+    background: linear-gradient(to right, #ffffff, #a6ff00);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -302,41 +156,25 @@
 #preloader {
   position: fixed;
   inset: 0;
-  background: #0a0a0a;
+  background: #050505;
   display: grid;
   place-items: center;
-  z-index: 50;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
+  z-index: 1000;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
 #preloader.hidden {
   opacity: 0;
   visibility: hidden;
-}
-
-.ripple-circle {
-  position: absolute;
-  border-radius: 9999px;
-  transform: scale(0);
-  background: rgba(255, 255, 255, 0.35);
-  animation: ripple 0.6s linear;
   pointer-events: none;
+  display: none !important;
 }
 
-@keyframes ripple {
-  to {
-    transform: scale(4);
-    opacity: 0;
-  }
+.logo-glow {
+  animation: logoPulse 2s ease-in-out infinite;
 }
 
-@media (max-width: 768px) {
-  .glass-card {
-    backdrop-filter: none;
-  }
-
-  .chip:nth-child(n + 6) {
-    display: none;
-  }
+@keyframes logoPulse {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(166, 255, 0, 0.4)); }
+  50% { filter: drop-shadow(0 0 25px rgba(166, 255, 0, 0.7)); }
 }
-
