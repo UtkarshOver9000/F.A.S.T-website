@@ -102,6 +102,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [eventFilter, setEventFilter] = useState("All");
   const [route, setRoute] = useState(getRouteFromHash);
+  const [imageError, setImageError] = useState({});
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -161,37 +162,47 @@ const App = () => {
 
   const aboutCards = [
     {
-      title: "Who are we?",
-      desc: "FAST is SRMIST's futuristic AI society focused on GPU computing, systems engineering, and AI innovation.",
-      icon: "WHO",
+      title: "What is FAST",
+      desc: "F.A.S.T is SRMIST’s NVIDIA-backed AI society focused on GPU computing, research, and community-led innovation.",
+      icon: "FAST",
     },
     {
-      title: "Our Mission",
-      desc: "Enable students to build, research, and ship AI systems through hands-on workshops and open collaboration.",
-      icon: "MIS",
+      title: "In it for you",
+      desc: "Hands-on mentorship, access to GPU labs, and collaborative projects that build real-world skills.",
+      icon: "YOU",
     },
     {
-      title: "Our Vision",
-      desc: "Create a next-gen community that leads AI breakthroughs in academia and industry.",
-      icon: "VIS",
+      title: "Join our research team",
+      desc: "Get involved in publications, open-source tooling, and cutting-edge AI systems research.",
+      icon: "R&D",
+    },
+    {
+      title: "Our NVIDIA partnership",
+      desc: "Official student developer ecosystem partner — access to resources, certifications, and industry mentorship.",
+      icon: "NVIDIA",
+    },
+    {
+      title: "Our Domains",
+      desc: "Technical, Corporate, and Creatives — three pillars powering FAST’s mission.",
+      icon: "DOM",
     },
   ];
 
   const domainGroups = [
     {
       title: "Technical",
-      desc: "The engineering backbone of FAST - hands-on builds and research.",
+      desc: "Hands-on system builds, AI models, and GPU-powered research projects.",
       imageLabel: "TECH",
       subdomains: ["AI", "Machine Learning", "DSBS"],
     },
     {
       title: "Corporate",
-      desc: "Partnerships, outreach, and growth for the FAST ecosystem.",
+      desc: "Partnerships, community growth, and professional development for FAST members.",
       imageLabel: "CORP",
     },
     {
       title: "Creatives",
-      desc: "Visual design, content, and storytelling that amplify the club.",
+      desc: "Design, branding, and storytelling that amplify our vision across campus.",
       imageLabel: "CRTV",
     },
   ];
@@ -323,27 +334,29 @@ const App = () => {
 
   const teamGroups = [
     {
-      title: "Founders",
+      title: "Leadership",
       members: [
         {
           name: "Adwaith P V",
-          role: "Co-Founder",
+          role: "President",
           initials: "AV",
           image: "adwaith-pv.jpg",
           linkedin: "https://www.linkedin.com/in/adwaithpv/",
         },
         {
           name: "Rohan Ganesh",
-          role: "Co-Founder",
+          role: "President",
           initials: "RG",
           image: "rohan-ganesh.jpg",
           linkedin: "https://www.linkedin.com/in/rohan-ganesh2306/",
         },
-      ],
-    },
-    {
-      title: "Department Leads",
-      members: [
+        {
+          name: "Tanmay Singh",
+          role: "Vice President",
+          initials: "TS",
+          image: "tanmay-singh.jpg",
+          linkedin: "",
+        },
         {
           name: "Vasist Acharya",
           role: "Technical Head",
@@ -352,25 +365,25 @@ const App = () => {
           linkedin: "https://www.linkedin.com/in/vasistacharya/",
         },
         {
-          name: "Aron Jolly",
-          role: "Sponsor Manager",
-          initials: "AJ",
-          image: "aron-jolly.jpg",
-          linkedin: "https://www.linkedin.com/in/aron-jolly-067461276/",
+          name: "Aditya Cherabolu",
+          role: "Corporate Head",
+          initials: "AC",
+          image: "aditya-chebrolu.jpg",
+          linkedin: "https://www.linkedin.com/in/aditya-chebrolu-5a0321277/",
         },
         {
           name: "Anushka Gupta",
-          role: "Creatives Head",
+          role: "Vision Head",
           initials: "AG",
           image: "anushka-gupta.jpg",
           linkedin: "https://www.linkedin.com/in/anushka-gupta04/",
         },
         {
-          name: "Aditya Cherabolu",
-          role: "People Management Head",
-          initials: "AC",
-          image: "aditya-chebrolu.jpg",
-          linkedin: "https://www.linkedin.com/in/aditya-chebrolu-5a0321277/",
+          name: "Skandesh Maadhav",
+          role: "Treasurer",
+          initials: "SM",
+          image: "skandesh-maadhav.jpg",
+          linkedin: "",
         },
       ],
     },
@@ -793,15 +806,31 @@ const App = () => {
                 >
                   <h3 className="font-heading text-lg text-fast-neon">{section.title}</h3>
                   <p className="mt-2 text-sm text-fast-mist">{section.description}</p>
-                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                    {Array.from({ length: section.slots }).map((_, index) => (
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {(section.images || []).map((src, index) => (
                       <div
                         key={`${section.title}-${index}`}
-                        className="flex h-28 items-center justify-center rounded-2xl border border-fast-neon/20 bg-fast-black/40 text-xs uppercase tracking-[0.25em] text-fast-mist"
+                        className="relative h-40 overflow-hidden rounded-2xl border border-fast-neon/20 bg-fast-black/40"
                       >
-                        TBA
+                        <img
+                          src={src}
+                          alt={`${section.title} ${index + 1}`}
+                          className="h-full w-full object-cover"
+                          onError={(event) => {
+                            event.currentTarget.style.display = "none";
+                          }}
+                        />
                       </div>
                     ))}
+                    {(!section.images || section.images.length === 0) &&
+                      Array.from({ length: section.slots }).map((_, index) => (
+                        <div
+                          key={`${section.title}-${index}`}
+                          className="flex h-40 items-center justify-center rounded-2xl border border-fast-neon/20 bg-fast-black/40 text-xs uppercase tracking-[0.25em] text-fast-mist"
+                        >
+                          TBA
+                        </div>
+                      ))}
                   </div>
                 </motion.div>
               ))}
@@ -866,16 +895,16 @@ const App = () => {
                   className="glass-card rounded-3xl p-6"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-fast-neon/40 bg-fast-black/40 text-sm font-heading text-fast-neon relative overflow-hidden">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full border border-fast-neon/40 bg-fast-black/40 text-base font-heading text-fast-neon relative overflow-hidden">
                       <img
                         src={`/assets/team/${member.image}`}
                         alt={member.name}
                         className="absolute inset-0 h-full w-full object-cover"
-                        onError={(event) => {
-                          event.currentTarget.style.display = "none";
-                        }}
+                        onError={() => setImageError((prev) => ({ ...prev, [member.name]: true }))}
                       />
-                      <span className="relative z-10">{member.initials}</span>
+                      {(imageError[member.name] || !member.image) && (
+                        <span className="relative z-10">{member.initials}</span>
+                      )}
                     </div>
                     <div>
                       <h4 className="font-heading text-base text-white">{member.name}</h4>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ff" />
+      <stop offset="100%" stop-color="#5e00ff" />
+    </linearGradient>
+    <clipPath id="circle">
+      <circle cx="200" cy="200" r="180" />
+    </clipPath>
+  </defs>
+  <rect width="400" height="400" fill="#070a14" />
+  <rect width="400" height="400" fill="url(#grad)" clip-path="url(#circle)" opacity="0.85" />
+  <text x="200" y="220" text-anchor="middle" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="120" font-weight="700" letter-spacing="2">AV</text>
+  <text x="200" y="305" text-anchor="middle" fill="#cfdfff" font-family="Helvetica, Arial, sans-serif" font-size="28">Co‑Founder</text>
+</svg>
