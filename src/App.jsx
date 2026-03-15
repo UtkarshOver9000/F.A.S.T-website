@@ -188,18 +188,18 @@ const App = () => {
     {
       title: "Technical",
       desc: "The tech backbone of our club - where innovation meets execution. From coding and development to hands-on projects, this team brings ideas to life with real-world impact.",
-      imageLabel: "Tech",
+      image: "/assets/domain-tech.png",
       subdomains: ["AI", "ML", "DSBS"],
     },
     {
       title: "Corporate",
       desc: "The bridge between our club and the outside world. Managing partnerships, sponsorships, and outreach while also driving workshops, hackathons, and events, this team ensures our presence is felt both on and off campus.",
-      imageLabel: "Corp",
+      image: "/assets/domain-corp.png",
     },
     {
       title: "Creatives",
       desc: "The storytellers and designers of the club. Through visuals, content, and unique ideas, this team adds the spark that makes everything we do engaging and unforgettable.",
-      imageLabel: "Crtv",
+      image: "/assets/domain-creatives.png",
     },
   ];
 
@@ -441,18 +441,20 @@ const App = () => {
             >
               Join FAST
             </a>
-            <button
-              type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-deep/70 md:hidden"
-              onClick={() => setMenuOpen((prev) => !prev)}
-              aria-label="Toggle navigation"
-            >
-              <div className="flex flex-col gap-1">
-                <span className="h-0.5 w-5 bg-fast-neon" />
-                <span className="h-0.5 w-5 bg-fast-neon" />
-                <span className="h-0.5 w-5 bg-fast-neon" />
-              </div>
-            </button>
+            {!menuOpen && (
+              <button
+                type="button"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-deep/70 md:hidden"
+                onClick={() => setMenuOpen((prev) => !prev)}
+                aria-label="Open navigation"
+              >
+                <div className="flex flex-col gap-1">
+                  <span className="h-0.5 w-5 bg-fast-neon" />
+                  <span className="h-0.5 w-5 bg-fast-neon" />
+                  <span className="h-0.5 w-5 bg-fast-neon" />
+                </div>
+              </button>
+            )}
           </div>
         </div>
         <AnimatePresence>
@@ -472,8 +474,16 @@ const App = () => {
                 className="h-full w-[78%] border-l border-fast-neon/20 bg-fast-deep/95 p-8 text-sm shadow-deep"
                 onClick={(event) => event.stopPropagation()}
               >
-                <div className="mb-8 flex items-center justify-between">
-                  <span className="font-heading text-lg tracking-[0.3em] text-fast-neon">MENU</span>
+                <div className="mb-12 flex items-center justify-between">
+                  <span className="font-heading text-xl tracking-[0.3em] text-fast-neon">MENU</span>
+                  <button 
+                    onClick={() => setMenuOpen(false)}
+                    className="h-10 w-10 flex items-center justify-center rounded-full border border-white/10 text-white"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                 </div>
                 <div className="flex flex-col gap-5">
                   {NAV_ITEMS.map((item) => (
@@ -658,9 +668,9 @@ const App = () => {
                   <span className="domain-orb -left-6 top-6" style={{ animationDelay: `${index * 0.3}s` }} />
                   <span className="domain-orb -right-5 bottom-6" style={{ animationDelay: `${index * 0.6}s` }} />
                   <div className="relative flex items-start gap-4">
-                    <div className="domain-image">
+                    <div className="domain-image group-hover:scale-110 transition-transform duration-500">
                       {domain.image ? (
-                        <img src={domain.image} alt={`${domain.title} visual`} className="h-full w-full rounded-full object-cover" />
+                        <img src={domain.image} alt={`${domain.title} visual`} className="h-full w-full object-cover" />
                       ) : (
                         <span>{domain.imageLabel}</span>
                       )}
@@ -736,8 +746,8 @@ const App = () => {
                       />
                     ) : null}
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(34,255,136,0.22),_transparent_60%)]" />
-                    <div className="absolute inset-0 flex items-center justify-center text-xs uppercase tracking-[0.35em] text-fast-mist">
-                      {event.poster ? "Fastathon Poster" : `${event.image} - TBA`}
+                    <div className="absolute inset-0 flex items-center justify-center text-[0.6rem] uppercase tracking-[0.4em] text-fast-mist/40 font-bold">
+                      {event.poster ? "" : `${event.image} - TBA`}
                     </div>
                   </div>
                   <div className="border-b border-fast-neon/15 bg-fast-black/40 p-6">
@@ -972,8 +982,8 @@ const App = () => {
                 },
                 {
                   name: "Shashwat Chaturvedi",
-                  image: null,
-                  linkedin: "#",
+                  image: "/assets/shashwat.png",
+                  linkedin: "https://www.linkedin.com/in/shashwat-chaturvedi-a840a4353/",
                 },
               ].map((builder) => (
                 <motion.div
@@ -1114,7 +1124,21 @@ const App = () => {
                 <p className="mt-2 text-sm text-fast-mist">Club highlights and event drops.</p>
               </motion.a>
             </div>
-            <p className="mt-6 text-center text-sm text-fast-mist">Email: fast@srmist.edu.in</p>
+            <div className="mx-auto mt-6 max-w-lg">
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+                className="glass-card rounded-2xl p-4 text-center border border-fast-neon/20"
+              >
+                <p className="text-[0.65rem] uppercase tracking-[0.4em] text-fast-mist mb-1">Official Inquiry</p>
+                <a href="mailto:fast@srmist.edu.in" className="text-lg font-heading text-fast-neon hover:text-white transition-colors">
+                  fast@srmist.edu.in
+                </a>
+              </motion.div>
+            </div>
           </div>
         </section>
         )}

@@ -10,9 +10,10 @@ export const ConstellationBackground = () => {
     let animationFrameId;
 
     let particles = [];
-    const particleCount = 60;
-    const connectionDistance = 150;
-    const mouse = { x: null, y: null, radius: 150 };
+    const isMobile = window.innerWidth < 768;
+    const particleCount = isMobile ? 30 : 60;
+    const connectionDistance = isMobile ? 100 : 150;
+    const mouse = { x: null, y: null, radius: isMobile ? 100 : 150 };
 
     const resize = () => {
       canvas.width = window.innerWidth;
