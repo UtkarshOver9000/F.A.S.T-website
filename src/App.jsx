@@ -488,7 +488,7 @@ const App = () => {
                   <img
                     src={heroPoster}
                     alt="FAST Poster"
-                    className="h-28 w-auto rounded-xl border border-fast-neon/20 shadow-glow md:h-32 logo-glow"
+                    className="h-28 w-auto md:h-32 logo-glow logo-screen-blend"
                   />
                 </h1>
                 <p className="mt-2 text-xl font-heading text-fast-neon">Futuristic AI Society of Tech</p>
