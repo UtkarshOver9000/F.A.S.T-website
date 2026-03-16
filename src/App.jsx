@@ -471,9 +471,18 @@ const App = () => {
               </span>
               <div className="flex flex-col items-start gap-2">
                 <div className="flex flex-col">
-                  <h1 className="text-6xl md:text-8xl font-black tracking-[0.15em] text-white text-shadow-glow">
-                    F.A.S.T
-                  </h1>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8 }}
+                    className="relative w-full max-w-md -ml-2"
+                  >
+                    <img 
+                      src={heroPoster} 
+                      alt="F.A.S.T" 
+                      className="h-32 md:h-48 w-auto object-contain logo-glow" 
+                    />
+                  </motion.div>
                 </div>
                 <p className="mt-4 text-xl md:text-2xl font-heading text-fast-neon">Futuristic AI Society of Tech</p>
                 <p className="mt-2 text-xs md:text-sm uppercase tracking-[0.4em] text-fast-neon/80">

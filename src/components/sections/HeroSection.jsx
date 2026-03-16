@@ -26,11 +26,13 @@ export const HeroSection = () => {
            whileInView={{ opacity: 1, scale: 1 }}
            viewport={{ once: true }}
            transition={{ duration: 0.8, delay: 0.2 }}
-           className="mb-8 relative"
+           className="mb-8 relative w-full max-w-md flex justify-center md:justify-start"
         >
-          <h1 className="text-6xl md:text-8xl font-black tracking-[0.15em] text-white text-shadow-glow">
-            F.A.S.T
-          </h1>
+          <img 
+            src="/assets/fast_poster.png" 
+            alt="F.A.S.T" 
+            className="h-32 md:h-48 w-auto object-contain logo-glow" 
+          />
         </motion.div>
 
         <motion.h1 
