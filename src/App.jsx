@@ -29,7 +29,6 @@ const NAV_ITEMS = [
   { label: "Domains", path: "domains" },
   { label: "Events", path: "events" },
   { label: "Gallery", path: "gallery" },
-  { label: "Projects", path: "projects" },
   { label: "Team", path: "team" },
   { label: "Contact", path: "contact" },
 ];
@@ -330,20 +329,7 @@ const App = () => {
     setEventNotice((prev) => ({ ...prev, [event.title]: "Details will be announced soon." }));
   };
 
-  const placeholderProjects = [
-    {
-      title: "Projects Launching Soon",
-      desc: "Our first wave of AI, GPU, and systems builds is in incubation.",
-    },
-    {
-      title: "Research Pipelines in Progress",
-      desc: "Teams are building showcase-ready demos for the NVIDIA ecosystem.",
-    },
-    {
-      title: "Open Source Repos (Coming Soon)",
-      desc: "GitHub will go live after our first internal release cycle.",
-    },
-  ];
+
 
   const teamGroups = [
     {
@@ -483,20 +469,18 @@ const App = () => {
               <span className="inline-flex items-center rounded-full border border-fast-neon/30 bg-fast-deep/80 px-4 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-fast-neon">
                 Powered by the NVIDIA Student Developer Ecosystem
               </span>
-              <div className="flex flex-col items-start gap-4">
-                <div className="relative">
-                  <img
-                    src={heroPoster}
-                    alt="FAST Poster"
-                    className="h-28 w-auto md:h-32 logo-glow"
-                  />
+              <div className="flex flex-col items-start gap-2">
+                <div className="flex flex-col">
+                  <h1 className="text-6xl md:text-8xl font-black tracking-[0.15em] text-white text-shadow-glow">
+                    F.A.S.T
+                  </h1>
                 </div>
-                <p className="mt-2 text-xl font-heading text-fast-neon">Futuristic AI Society of Tech</p>
-                <p className="mt-2 text-sm uppercase tracking-[0.35em] text-fast-neon">
+                <p className="mt-4 text-xl md:text-2xl font-heading text-fast-neon">Futuristic AI Society of Tech</p>
+                <p className="mt-2 text-xs md:text-sm uppercase tracking-[0.4em] text-fast-neon/80">
                   Compute. Train. Accelerate.
                 </p>
               </div>
-              <p className="max-w-xl text-fast-mist">
+              <p className="max-w-xl text-fast-mist text-lg">
                 Building the future of Artificial Intelligence, GPU Computing, and Systems Innovation at SRMIST
                 Kattankulathur.
               </p>
@@ -843,40 +827,6 @@ const App = () => {
         </section>
         )}
 
-        {route === "projects" && (
-        <section id="projects" className="section-wrap">
-          <div className="mx-auto w-[92%] max-w-6xl">
-            <SectionHeading
-              eyebrow="What We Build"
-              title="Student Projects"
-              description="Projects are in production. Our GitHub and demos will go live after the first release cycle."
-            />
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {placeholderProjects.map((project) => (
-                <motion.div
-                  key={project.title}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  className="glass-card rounded-3xl p-6"
-                >
-                  <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-fast-mist">
-                    <span>Coming Soon</span>
-                    <span className="text-fast-neon">GitHub TBA</span>
-                  </div>
-                  <h3 className="mt-4 font-heading text-lg">{project.title}</h3>
-                  <p className="mt-2 text-sm text-fast-mist">{project.desc}</p>
-                  <div className="mt-6 rounded-full border border-fast-neon/20 bg-fast-deep/70 px-4 py-2 text-center text-xs uppercase tracking-[0.2em] text-fast-mist">
-                    Placeholder
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-        )}
 
         {route === "team" && (
         <section id="team" className="section-wrap">
