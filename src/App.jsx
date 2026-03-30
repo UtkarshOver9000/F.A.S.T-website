@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { ConstellationBackground } from "./components/ui/ConstellationBackground";
+import { AskAI } from "./components/ui/AskAI";
 
 const fastLogo = "/assets/fast-logo-icon.png";
 const nvidiaLogo = "/assets/nvidia-logo.png";
 const srmistLogo = "/assets/srmist-logo.png";
-const heroPoster = "/assets/fast_poster.png";
+const heroPoster = "/assets/fast-logo-text.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -406,7 +407,7 @@ const App = () => {
       >
         <div className="mx-auto flex w-[92%] max-w-7xl items-center justify-between">
           <a href="#/home" className="flex items-center gap-3 group">
-            <img src={fastLogo} alt="FAST" className="h-10 w-auto logo-glow transition-transform group-hover:scale-110" />
+            <img src={fastLogo} alt="FAST" className="h-12 w-auto logo-glow transition-transform group-hover:scale-110" />
           </a>
           <nav className="hidden items-center gap-6 lg:gap-8 text-[0.62rem] font-bold uppercase tracking-[0.2em] md:flex">
             {NAV_ITEMS.map((item) => (
@@ -452,119 +453,284 @@ const App = () => {
 
       <main className={`relative z-10 ${route !== 'home' ? 'section-bg-tech' : ''}`}>
         {route === "home" && (
-        <section id="home" className="section-wrap min-h-screen grid-bg flex items-center justify-center pt-24 pb-12 overflow-hidden bg-[#050505]">
+        <>
+        {/* Hero Section - Centered Layout with badass animations */}
+        <section id="home" className="section-wrap min-h-screen flex flex-col items-center justify-center pt-24 pb-16 overflow-hidden bg-[#050505] relative">
           <ConstellationBackground />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/40 via-[#050505]/70 to-[#050505]/95 pointer-events-none" />
-          <div className="absolute -right-24 top-24 h-72 w-72 rounded-full spiral-bg opacity-45 pointer-events-none" />
-          <div className="absolute -left-20 bottom-16 h-56 w-56 rounded-full spiral-bg opacity-30 pointer-events-none" />
-          <ChipRain />
-          <div className="relative mx-auto grid w-[92%] max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/30 via-transparent to-[#050505]/90 pointer-events-none" />
+
+          {/* Floating Ambient Orbs */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
             <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-6"
+              animate={{ y: [0, -40, 0], x: [0, 20, 0], scale: [1, 1.2, 1] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-[15%] left-[10%] h-64 w-64 rounded-full bg-fast-neon/[0.04] blur-[80px]"
+            />
+            <motion.div
+              animate={{ y: [0, 30, 0], x: [0, -25, 0], scale: [1.1, 0.9, 1.1] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+              className="absolute top-[30%] right-[8%] h-80 w-80 rounded-full bg-fast-nvidia/[0.05] blur-[100px]"
+            />
+            <motion.div
+              animate={{ y: [0, -20, 0], x: [0, 15, 0] }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+              className="absolute bottom-[20%] left-[25%] h-48 w-48 rounded-full bg-fast-cyan/[0.03] blur-[60px]"
+            />
+          </div>
+
+          {/* Horizontal Scan Line */}
+          <motion.div
+            initial={{ top: "0%", opacity: 0 }}
+            animate={{ top: ["0%", "100%"], opacity: [0, 0.6, 0.6, 0] }}
+            transition={{ duration: 2.5, delay: 0.5, ease: "easeInOut" }}
+            className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-fast-neon to-transparent pointer-events-none z-20"
+            style={{ boxShadow: "0 0 30px 10px rgba(166, 255, 0, 0.15)" }}
+          />
+
+          <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-4xl mx-auto">
+
+            {/* Badge — slides down */}
+            <motion.span
+              initial={{ opacity: 0, y: -30, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="inline-flex items-center gap-2 rounded-full border border-fast-neon/30 bg-fast-deep/80 px-5 py-2 text-[0.65rem] uppercase tracking-[0.3em] text-fast-neon mb-8"
             >
-              <span className="inline-flex items-center rounded-full border border-fast-neon/30 bg-fast-deep/80 px-4 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-fast-neon">
-                Powered by the NVIDIA Student Developer Ecosystem
-              </span>
-              <div className="flex flex-col items-start gap-2">
-                <div className="flex flex-col">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8 }}
-                    className="relative w-full max-w-md -ml-2"
-                  >
-                    <img 
-                      src={heroPoster} 
-                      alt="F.A.S.T" 
-                      className="h-32 md:h-48 w-auto object-contain logo-glow" 
-                    />
-                  </motion.div>
-                </div>
-                <p className="mt-4 text-xl md:text-2xl font-heading text-fast-neon">Futuristic AI Society of Tech</p>
-                <p className="mt-2 text-xs md:text-sm uppercase tracking-[0.4em] text-fast-neon/80">
-                  Compute. Train. Accelerate.
-                </p>
-              </div>
-              <p className="max-w-xl text-fast-mist text-lg">
-                Building the future of Artificial Intelligence, GPU Computing, and Systems Innovation at SRMIST
-                Kattankulathur.
-              </p>
-              <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-fast-mist">
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-black/40">
-                  <img
-                    src={srmistLogo}
-                    alt="SRMIST"
-                    className="h-7 w-7 object-contain"
-                    onError={(event) => {
-                      event.currentTarget.style.display = "none";
-                      const fallback = event.currentTarget.nextSibling;
-                      if (fallback) fallback.style.display = "flex";
-                    }}
-                  />
-                  <span className="hidden text-[0.55rem] uppercase tracking-[0.2em] text-fast-mist">
-                    SRMIST
-                  </span>
-                </div>
-                SRMIST Kattankulathur
-              </div>
-              <div className="flex flex-wrap gap-4">
-                <a
-                  href="#/contact"
-                  className="rounded-full bg-gradient-to-r from-fast-nvidia to-fast-neon px-6 py-3 text-sm font-semibold text-fast-black shadow-glow transition hover:-translate-y-0.5 ripple-btn"
-                  onClick={handleRipple}
-                >
-                  Join the Community
-                </a>
-                <a
-                  href="#/domains"
-                  className="rounded-full border border-fast-neon/30 bg-fast-deep/60 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 ripple-btn"
-                  onClick={handleRipple}
-                >
-                  Explore Domains
-                </a>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {stats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="glass-card rounded-2xl px-4 py-5 text-center"
-                  >
-                    <div className="text-2xl font-heading text-fast-cyan">{stat.value}</div>
-                    <div className="mt-1 text-xs uppercase tracking-[0.3em] text-fast-mist">
-                      {stat.label}
-                    </div>
-                    <div className="mt-2 text-[0.7rem] text-fast-mist">{stat.note}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="rounded-2xl border border-fast-neon/20 bg-fast-deep/70 px-5 py-4 text-sm text-fast-mist">
-                NVIDIA-backed learning, research, and GPU-first innovation at SRMIST.
-              </div>
+              <span className="h-1.5 w-1.5 rounded-full bg-fast-neon animate-pulse" />
+              Powered by the NVIDIA Student Developer Ecosystem
+            </motion.span>
+
+            {/* F.A.S.T Logo — dramatic scale + blur reveal + glow pulse */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5, filter: "blur(30px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1.4, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="mb-4 relative"
+            >
+              {/* Glow burst behind logo */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.3 }}
+                animate={{ opacity: [0, 0.5, 0.2], scale: [0.3, 1.5, 1.2] }}
+                transition={{ duration: 2, delay: 1.5 }}
+                className="absolute inset-0 -inset-x-20 -inset-y-10 bg-fast-neon/10 rounded-full blur-[60px] pointer-events-none"
+              />
+              <img
+                src={heroPoster}
+                alt="F.A.S.T"
+                className="h-36 md:h-56 lg:h-64 w-auto object-contain logo-glow mx-auto relative z-10"
+              />
             </motion.div>
 
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              transition={{ duration: 0.9, ease: "easeOut", delay: 0.1 }}
-              className="relative flex flex-col items-center gap-6"
+            {/* Slogan — typewriter-style reveal */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 2.0 }}
+              className="text-xl md:text-2xl font-heading text-fast-neon mb-2"
             >
-              <div className="hero-slab angled-card rounded-3xl p-6 text-center">
-                <p className="text-xs uppercase tracking-[0.4em] text-fast-nvidia">Partnered With</p>
-                <div className="mt-5 flex items-center justify-center">
-                  <img src={nvidiaLogo} alt="NVIDIA" className="h-16 logo-glow" />
-                </div>
-                <p className="mt-4 text-sm text-fast-mist">
-                  Official NVIDIA Student Developer Ecosystem Partner
-                </p>
+              <motion.span
+                initial={{ width: 0 }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 1.2, delay: 2.2, ease: "easeOut" }}
+                className="inline-block overflow-hidden whitespace-nowrap"
+              >
+                Futuristic AI Society of Tech
+              </motion.span>
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, letterSpacing: "0.8em" }}
+              animate={{ opacity: 1, letterSpacing: "0.4em" }}
+              transition={{ duration: 1, delay: 2.6 }}
+              className="text-xs md:text-sm uppercase text-fast-neon/80 mb-6"
+            >
+              Compute. Train. Accelerate.
+            </motion.p>
+
+            {/* Description — fade up from below */}
+            <motion.p
+              initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, delay: 3.0 }}
+              className="text-fast-mist text-base md:text-lg leading-relaxed max-w-2xl mb-6"
+            >
+              Building the future of Artificial Intelligence, GPU Computing, and Systems Innovation at SRMIST Kattankulathur.
+            </motion.p>
+
+            {/* SRMIST Badge — slide in */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 3.3 }}
+              className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-fast-mist mb-8"
+            >
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-full border border-fast-neon/30 bg-fast-black/40">
+                <img
+                  src={srmistLogo}
+                  alt="SRMIST"
+                  className="h-7 w-7 object-contain"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                    const fallback = event.currentTarget.nextSibling;
+                    if (fallback) fallback.style.display = "flex";
+                  }}
+                />
+                <span className="hidden text-[0.55rem] uppercase tracking-[0.2em] text-fast-mist">
+                  SRMIST
+                </span>
               </div>
+              SRMIST Kattankulathur
+            </motion.div>
+
+            {/* CTA Buttons — pop in with spring */}
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.6, delay: 3.5, type: "spring", stiffness: 200 }}
+              className="flex flex-wrap justify-center gap-4 mb-10"
+            >
+              <a
+                href="#/contact"
+                className="rounded-full bg-gradient-to-r from-fast-nvidia to-fast-neon px-6 py-3 text-sm font-semibold text-fast-black shadow-glow transition hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(166,255,0,0.4)] ripple-btn"
+                onClick={handleRipple}
+              >
+                Join the Community
+              </a>
+              <a
+                href="#/domains"
+                className="rounded-full border border-fast-neon/30 bg-fast-deep/60 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-fast-neon/60 ripple-btn"
+                onClick={handleRipple}
+              >
+                Explore Domains
+              </a>
+            </motion.div>
+
+            {/* Stats Grid — staggered scale-in */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 3.8 }}
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full max-w-3xl mb-6"
+            >
+              {stats.map((stat, idx) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, scale: 0.7, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 3.9 + idx * 0.15, type: "spring", stiffness: 300 }}
+                  className="glass-card rounded-2xl px-4 py-5 text-center"
+                >
+                  <div className="text-2xl font-heading text-fast-cyan">{stat.value}</div>
+                  <div className="mt-1 text-xs uppercase tracking-[0.3em] text-fast-mist">
+                    {stat.label}
+                  </div>
+                  <div className="mt-2 text-[0.7rem] text-fast-mist">{stat.note}</div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Info Box — slide up */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 4.5 }}
+              className="rounded-2xl border border-fast-neon/20 bg-fast-deep/70 px-5 py-4 text-sm text-fast-mist max-w-2xl w-full mb-10"
+            >
+              NVIDIA-backed learning, research, and GPU-first innovation at SRMIST.
+            </motion.div>
+
+            {/* NVIDIA Partner Card — dramatic entrance */}
+            <motion.div
+              initial={{ opacity: 0, rotateX: 90, y: 40 }}
+              animate={{ opacity: 1, rotateX: 0, y: 0 }}
+              transition={{ duration: 0.8, delay: 4.8, ease: [0.16, 1, 0.3, 1] }}
+              className="hero-slab rounded-3xl p-6 text-center max-w-sm"
+              style={{ perspective: 1000 }}
+            >
+              <p className="text-xs uppercase tracking-[0.4em] text-fast-nvidia">Partnered With</p>
+              <div className="mt-5 flex items-center justify-center">
+                <img src={nvidiaLogo} alt="NVIDIA" className="h-16 logo-glow" />
+              </div>
+              <p className="mt-4 text-sm text-fast-mist">
+                Official NVIDIA Student Developer Ecosystem Partner
+              </p>
             </motion.div>
           </div>
         </section>
+
+        {/* The FAST Framework Section */}
+        <section className="relative py-24 bg-[#050505] overflow-hidden">
+          <ConstellationBackground />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/80 via-transparent to-[#050505]/90 pointer-events-none" />
+          <div className="relative z-10 mx-auto w-[92%] max-w-6xl">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.7 }}
+              className="text-center mb-16"
+            >
+              <span className="text-[0.65rem] uppercase tracking-[0.5em] text-fast-neon/70 block mb-4">System Architecture</span>
+              <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl text-white">
+                The FAST Framework
+              </h2>
+              <p className="mt-4 max-w-2xl mx-auto text-fast-mist text-sm md:text-base leading-relaxed">
+                We emulate the high-performance computing ethos of NVIDIA to build our community's foundational knowledge base.
+              </p>
+            </motion.div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {[
+                {
+                  icon: (
+                    <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                    </svg>
+                  ),
+                  title: "Powered by Tensor Cores",
+                  desc: "Like specialized hardware accelerating math equations, our community accelerates learning by focusing on the fundamental algorithms driving Deep Learning.",
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  ),
+                  title: "CUDA-Accelerated Growth",
+                  desc: "Parallel processing is at our core. We foster an environment where multiple disciplines—Data, Business, and Tech—thread together.",
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  ),
+                  title: "Ray-Traced Vision",
+                  desc: "Clarity and precision in our goals. We trace the path of emerging technologies to illuminate future career paths for our members.",
+                },
+              ].map((card, idx) => (
+                <motion.div
+                  key={card.title}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, delay: idx * 0.12 }}
+                  className="framework-card group relative rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm p-8 transition-all duration-500 hover:border-fast-neon/40 hover:bg-white/[0.06]"
+                >
+                  <div className="framework-card-accent" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-fast-neon/30 bg-fast-neon/10 text-fast-neon mb-6 transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(166,255,0,0.3)]">
+                    {card.icon}
+                  </div>
+                  <h3 className="font-heading text-lg text-white mb-3">{card.title}</h3>
+                  <p className="text-sm text-fast-mist leading-relaxed">{card.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+        </>
         )}
 
         {route === "about" && (
@@ -1179,6 +1345,9 @@ const App = () => {
           </motion.div>
         ) : null}
       </AnimatePresence>
+
+      {/* AI Assistant Widget */}
+      <AskAI />
     </div>
   );
 };

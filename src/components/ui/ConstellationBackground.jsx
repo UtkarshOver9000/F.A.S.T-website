@@ -11,9 +11,9 @@ export const ConstellationBackground = () => {
 
     let particles = [];
     const isMobile = window.innerWidth < 768;
-    const particleCount = isMobile ? 30 : 60;
-    const connectionDistance = isMobile ? 100 : 150;
-    const mouse = { x: null, y: null, radius: isMobile ? 100 : 150 };
+    const particleCount = isMobile ? 45 : 90;
+    const connectionDistance = isMobile ? 120 : 180;
+    const mouse = { x: null, y: null, radius: isMobile ? 120 : 200 };
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -32,16 +32,24 @@ export const ConstellationBackground = () => {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = (Math.random() - 0.5) * 0.8;
-        this.speedY = (Math.random() - 0.5) * 0.8;
+        this.size = Math.random() * 3 + 1;
+        this.baseSize = this.size;
+        this.speedX = (Math.random() - 0.5) * 0.6;
+        this.speedY = (Math.random() - 0.5) * 0.6;
         const colorPool = ['#ffffff', '#76B900', '#a6ff00', '#22FF88'];
         this.color = colorPool[Math.floor(Math.random() * colorPool.length)];
+        this.pulseSpeed = Math.random() * 0.02 + 0.01;
+        this.pulseOffset = Math.random() * Math.PI * 2;
       }
 
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
+
+        // Pulsing size for larger particles
+        if (this.baseSize > 2) {
+          this.size = this.baseSize + Math.sin(Date.now() * this.pulseSpeed + this.pulseOffset) * 0.8;
+        }
 
         if (this.x > canvas.width) this.x = 0;
         else if (this.x < 0) this.x = canvas.width;
@@ -67,8 +75,7 @@ export const ConstellationBackground = () => {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
-        // Add glow
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = this.baseSize > 2 ? 20 : 10;
         ctx.shadowColor = this.color;
         ctx.fill();
         ctx.shadowBlur = 0;
