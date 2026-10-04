@@ -1,6 +1,8 @@
-# F.A.S.T — Futuristic AI Society of Tech
+# F.A.S.T: Futuristic AI Society of Tech
 
 Official website for the F.A.S.T (Futuristic AI Society of Tech) club at SRMIST Kattankulathur. The site is built with React, Tailwind, and Framer Motion, with a lightweight Node/Express backend for live endpoints.
+
+**Live:** https://f-a-s-t-website-one.vercel.app
 
 ## Stack
 - React + Vite
@@ -27,11 +29,17 @@ npm run dev:server
 The frontend runs at `http://localhost:5173` and the backend at `http://localhost:5174`.
 
 ## Environment Variables
-Create a `.env` in the project root:
+Copy `.env.example` to `.env` and fill in your own values. `.env` is gitignored and must
+never be committed.
 ```
-VITE_API_BASE=http://localhost:5174
-GNEWS_API_KEY=your_gnews_key
+cp .env.example .env
 ```
+
+| Variable | Used by | Purpose |
+|---|---|---|
+| `GNEWS_API_KEY` | `server/index.js` only | GNews API key for `/api/news`, kept server-side |
+| `PORT` | `server/index.js` | backend port (default 5174) |
+| `VITE_API_BASE` | frontend | URL of the backend |
 
 ## Backend Endpoints
 - `GET /api/health` — health check
@@ -65,3 +73,6 @@ VITE_API_BASE=https://your-backend-domain
 ## Notes
 - The live code editor runs locally in the browser and does not execute Python.
 - Add a secure sandbox backend if you want real Python execution.
+
+## License
+MIT for the code (see `LICENSE`). Photos, logos and other media in `public/assets` are not covered.

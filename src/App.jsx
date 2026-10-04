@@ -262,9 +262,9 @@ const App = () => {
       description: "Labs, workshops, and hackathon builds.",
       images: [
         "/assets/technical1.jpeg",
-        "/assets/technical2 (1).jpeg",
-        "/assets/technical2 (3).jpeg",
-        "/assets/technical4).jpeg",
+        "/assets/technical2-1.jpeg",
+        "/assets/technical2-3.jpeg",
+        "/assets/technical4.jpeg",
       ],
     },
     {

@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Secrets: copy .env.example to .env locally, never commit it
+.env
+.env.*
+!.env.example
